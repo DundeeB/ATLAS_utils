@@ -1,6 +1,5 @@
 #!/Local/cmp/anaconda3/bin/python -u
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import argparse
 
@@ -36,6 +35,13 @@ plt.grid()
 plt.legend()
 plt.xlabel(args.x_label)
 plt.ylabel(args.y_label)
-font = {'family': 'normal', 'weight': 'bold', 'size': 22}
-matplotlib.rc('font', **font)
+size=15
+params = {'legend.fontsize': 'large',
+          'figure.figsize': (20,8),
+          'axes.labelsize': size,
+          'axes.titlesize': size,
+          'xtick.labelsize': size*0.75,
+          'ytick.labelsize': size*0.75,
+          'axes.titlepad': 25}
+plt.rcParams.update(params)
 plt.show()
