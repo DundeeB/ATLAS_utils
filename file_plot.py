@@ -1,5 +1,5 @@
 #!/Local/cmp/anaconda3/bin/python -u
-import sys
+import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 
