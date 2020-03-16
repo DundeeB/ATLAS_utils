@@ -14,6 +14,8 @@ parser.add_argument('-s', '--style', type=str, nargs='?', default='-', help='leg
 
 args = parser.parse_args()
 for f in args.files:
-    x, y = np.loadtxt(args.files, usecols=(args.x_column, args.y_column), unpack=True)
-    plt.plot(x, y, args.style)
+    # x, y = np.loadtxt(args.files, usecols=(args.x_column, args.y_column), unpack=True)
+    # plt.plot(x, y, args.style)
+    A = np.loadtxt(args.files)
+    plt.plot(A[1], A[2], args.style)
 plt.show()
