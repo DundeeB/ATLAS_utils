@@ -13,10 +13,8 @@ parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plo
 parser.add_argument('-s', '--style', type=str, nargs='?', default='-', help='legends of plot')
 
 args = parser.parse_args()
+print(args.files)
 for f in args.files:
-    # x, y = np.loadtxt(args.files, usecols=(args.x_column, args.y_column), unpack=True)
-    # plt.plot(x, y, args.style)
-    A = np.loadtxt(f)
-    print(A)
-    plt.plot(A[0,:], A[1,:], args.style)
+    x, y = np.loadtxt(f, usecols=(args.x_column, args.y_column), unpack=True)
+    plt.plot(x, y, args.style)
 plt.show()
