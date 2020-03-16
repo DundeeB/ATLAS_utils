@@ -28,8 +28,8 @@ for f in args.files:
         if args.legends is None:
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col)
         else:
-            lbl = args.legend[i]
-        plt.plot(x, y, s, label=lbl)
+            lbl = args.legends[i]
+        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=12)
         i += 1
 plt.grid()
 plt.legend()
