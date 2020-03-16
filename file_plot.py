@@ -31,5 +31,8 @@ for f in args.files:
             lbl = args.legend[i]
         plt.plot(x, y, s, label=lbl)
         i += 1
-plt.show()
 plt.grid()
+plt.legend()
+plt.xlabel(args.x_label)
+plt.ylabel(args.y_label)
+plt.show()
