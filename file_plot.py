@@ -5,27 +5,27 @@ import argparse
 
 parser = argparse.ArgumentParser(description='plot options')
 parser.add_argument('-f', '--files', type=str, nargs='+', help='files to read data and plot from')
-parser.add_argument('-x', '--x_column', type=int, nargs='*', default=1, help='x column to plot')
-parser.add_argument('-y', '--y_column', type=int, nargs='*', default=2, help='y column to plot')
+parser.add_argument('-x', '--x_column', type=int, nargs='*', default=[1], help='x column to plot')
+parser.add_argument('-y', '--y_column', type=int, nargs='*', default=[2], help='y column to plot')
 parser.add_argument('-xL', '--x_label', type=str, nargs='?', default='x', help='x label')
 parser.add_argument('-yL', '--y_label', type=str, nargs='?', default='y', help='y label')
 parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
-parser.add_argument('-s', '--style', type=str, nargs='?', default='.', help='legends of plot')
+parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
 
 args = parser.parse_args()
 n_xy = max([len(args.x_column), len(args.y_column)])
 if len(args.x_column) == 1:
-    args.x_column = [args.x_column for _ in range(n_xy)]
+    args.x_column = [args.x_column[0] for _ in range(n_xy)]
 if len(args.y_column) == 1:
-    args.y_column = [args.y_column for _ in range(n_xy)]
+    args.y_column = [args.y_column[0] for _ in range(n_xy)]
 if len(args.style) == 1:
-    args.style = [args.style for _ in range(n_xy)]
+    args.style = [args.style[0] for _ in range(n_xy)]
 
 i = 0
 for f in args.files:
     for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
-        if not len(args.legends):
+        if args.legends is None:
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col)
         else:
             lbl = args.legend[i]
