@@ -1,5 +1,6 @@
 #!/Local/cmp/anaconda3/bin/python -u
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import argparse
 
@@ -35,4 +36,6 @@ plt.grid()
 plt.legend()
 plt.xlabel(args.x_label)
 plt.ylabel(args.y_label)
+font = {'family': 'normal', 'weight': 'bold', 'size': 22}
+matplotlib.rc('font', **font)
 plt.show()
