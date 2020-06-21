@@ -29,7 +29,7 @@ for f in args.files:
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col)
         else:
             lbl = args.legends[i]
-        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=12)
+        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
         i += 1
 plt.grid()
 plt.legend()
@@ -44,5 +44,6 @@ params = {'legend.fontsize': 'large',
           'ytick.labelsize': size*0.75,
           'axes.titlepad': 25}
 plt.rcParams.update(params)
+plt.axis('equal')
 plt.show()
 
