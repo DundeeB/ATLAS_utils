@@ -11,9 +11,9 @@ parser.add_argument('-xL', '--x_label', type=str, nargs='?', default='x', help='
 parser.add_argument('-yL', '--y_label', type=str, nargs='?', default='y', help='y label')
 parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
 parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
-parser.add_argument('-neq', '--not_equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
-parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False, help='axis equal')
-parser.add_argument('-m1', '--minus_one', type=bool, nargs='?', const=True, default=False, help='axis equal')
+parser.add_argument('-eq', '--equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
+parser.add_argument('-mn', '--psis_mn', type=str, nargs='*', default='23', help='mn=14 or 23')
+parser.add_argument('-up', '--upper', type=bool, nargs='?', default=True, default=False, help='plot upper correlations')
 
 args = parser.parse_args()
 n_xy = max([len(args.x_column), len(args.y_column)])
@@ -25,19 +25,25 @@ if len(args.style) == 1:
     args.style = [args.style[0] for _ in range(n_xy)]
 
 i = 0
+plt.figure()
 for f in args.files:
     for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
-        x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
-        if args.minus_one:
-            y = y - 1
+        x, y = np.loadtxt(f+'OP/psi_'+arg.psis_mn+'_corr*', usecols=(x_col - 1, y_col - 1), unpack=True)
         if args.legends is None:
-            lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col)
+            lbl = f + ', $\psi$_{'+arg.psis_mn+'}'
+        else:
+            lbl = args.legends[i] + ', $\psi$_{'+arg.psis_mn+'}'
+        plt.subplot(211)
+        plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
+        if args.upper:
+            
+
+        x, y = np.loadtxt(f+'OP/upper_psi_*corr*', usecols=(x_col - 1, y_col - 1), unpack=True)
+        if args.legends is None:
+            lbl = f + ', $\psi$_{23}'
         else:
             lbl = args.legends[i]
-        if args.loglog:
-            plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
-        else:
-            plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+
         i += 1
 plt.grid()
 plt.legend()
@@ -52,7 +58,7 @@ params = {'legend.fontsize': 'large',
           'ytick.labelsize': size*0.75,
           'axes.titlepad': 25}
 plt.rcParams.update(params)
-if not args.not_equal:
+if args.equal:
     plt.axis('equal')
 plt.show()
 
