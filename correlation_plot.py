@@ -14,7 +14,7 @@ def main():
     parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='legends of plot')
     parser.add_argument('-eq', '--equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
-    parser.add_argument('-mn', '--psis_mn', type=str, nargs='*', default='23', help='mn=14 or 23')
+    parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default='23', help='mn=14 or 23')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations')
 
