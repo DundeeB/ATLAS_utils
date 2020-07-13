@@ -11,10 +11,8 @@ def main():
     parser.add_argument('-f', '--files', type=str, nargs='+', help='files to read data and plot from')
     parser.add_argument('-x', '--x_column', type=int, nargs='*', default=[1], help='x column to plot')
     parser.add_argument('-y', '--y_column', type=int, nargs='*', default=[2], help='y column to plot')
-    parser.add_argument('-xL', '--x_label', type=str, nargs='?', default='x', help='x label')
-    parser.add_argument('-yL', '--y_label', type=str, nargs='?', default='y', help='y label')
     parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
-    parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
+    parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='legends of plot')
     parser.add_argument('-eq', '--equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='*', default='23', help='mn=14 or 23')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
@@ -56,8 +54,8 @@ def main():
     plt.subplot(211)
     plt.grid()
     plt.legend()
-    plt.xlabel(args.x_label)
-    plt.ylabel(args.y_label)
+    plt.xlabel('$\Delta$r [$\sigma$=2]')
+    plt.ylabel('Orientational correlation')
     size = 15
     params = {'legend.fontsize': 'large',
               'figure.figsize': (20, 8),
@@ -73,8 +71,8 @@ def main():
     plt.subplot(212)
     plt.grid()
     plt.legend()
-    plt.xlabel(args.x_label)
-    plt.ylabel(args.y_label)
+    plt.xlabel('$\Delta$x [$\sigma$=2]')
+    plt.ylabel('Positional correlation')
     size = 15
     params = {'legend.fontsize': 'large',
               'figure.figsize': (20, 8),
