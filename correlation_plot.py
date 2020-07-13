@@ -52,7 +52,7 @@ def main():
                     plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
 
                 i += 1
-        except err:
+        except Exception as err:
             print(err)
     plt.subplot(211)
     plt.grid()
