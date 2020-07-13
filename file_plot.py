@@ -28,12 +28,8 @@ i = 0
 for f in args.files:
     for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
-        if args.minus_one:
-            y = y - 1
-        if args.legends is None:
-            lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col)
-        else:
-            lbl = args.legends[i]
+        y = y - 1 if args.minus_one else y
+        lbl = f if args.legends is None else args.legends[i]
         if args.loglog:
             plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
         else:
@@ -43,16 +39,15 @@ plt.grid()
 plt.legend()
 plt.xlabel(args.x_label)
 plt.ylabel(args.y_label)
-size=15
+size = 15
 params = {'legend.fontsize': 'large',
-          'figure.figsize': (20,8),
+          'figure.figsize': (20, 8),
           'axes.labelsize': size,
           'axes.titlesize': size,
-          'xtick.labelsize': size*0.75,
-          'ytick.labelsize': size*0.75,
+          'xtick.labelsize': size * 0.75,
+          'ytick.labelsize': size * 0.75,
           'axes.titlepad': 25}
 plt.rcParams.update(params)
 if not args.not_equal:
     plt.axis('equal')
 plt.show()
-
