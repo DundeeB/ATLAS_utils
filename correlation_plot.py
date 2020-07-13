@@ -37,11 +37,11 @@ def main():
             plt.subplot(211)
             x, y = np.loadtxt(corr_file('psi_' + args.psis_mn + '_corr.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
             lbl = f if args.legends is None else args.legends[i]
-            plt.loglog(x, y, s, label=lbl + ', $\psi$_{' + args.psis_mn + '}', linewidth=2, markersize=6)
+            plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
             if args.upper:
                 x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'), usecols=(x_col - 1, y_col - 1),
                                   unpack=True)
-                plt.loglog(x, y, s, label=lbl + ', upper layer $\psi$_{1' + str(m * n) + '}', linewidth=2, markersize=6)
+                plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2, markersize=6)
 
             plt.subplot(212)
             x, y = np.loadtxt(corr_file('positional_theta=.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
