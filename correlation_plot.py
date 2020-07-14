@@ -17,7 +17,7 @@ def main():
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default='23', help='mn=14 or 23')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations')
-    parser.add_argument('-p', '--poly', type=str, nargs='*', const=True, default=False, help='add polynomial decay')
+    parser.add_argument('-p', '--poly', type=str, nargs='?', const=True, default=False, help='add polynomial decay')
 
     args = parser.parse_args()
     n_xy = max([len(args.x_column), len(args.y_column)])
