@@ -85,6 +85,8 @@ def main():
         plt.axis('equal')
 
     plt.subplot(212)
+    if args.poly:
+        plt.loglog(x, max_y_pos * np.power(np.array(x) / x_pos, -1.0 / 3), '--', label='$x^{-1/3}$')
     plt.grid()
     plt.legend()
     plt.xlabel('$\Delta$x [$\sigma$=2]')
