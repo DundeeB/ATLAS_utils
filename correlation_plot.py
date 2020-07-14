@@ -66,7 +66,7 @@ def main():
             print(err)
     plt.subplot(211)
     if args.poly:
-        plt.loglog(x, max_y_psi * np.power(x / x_psi, -1.0 / 4), '--', label='$x^{-1/4}$')
+        plt.loglog(x, max_y_psi * np.power(np.array(x) / x_psi, -1.0 / 4), '--', label='$x^{-1/4}$')
     plt.grid()
     plt.legend()
     plt.xlabel('$\Delta$r [$\sigma$=2]')
