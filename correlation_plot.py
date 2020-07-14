@@ -42,20 +42,20 @@ def main():
                                   unpack=True)
                 lbl = f if args.legends is None else args.legends[i]
                 plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
+                if np.nanmax(y) > max_y_psi:
+                    max_y_psi = np.max(y)
+                    x_psi = x[np.nanargmax(y)]
+                    print(x_psi)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'), usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
                     plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                markersize=6)
-                if np.max(y) > max_y_psi:
-                    max_y_psi = np.max(y)
-                    x_psi = x[np.argmax(y)]
-                    print(x_psi)
                 plt.subplot(212)
                 x, y = np.loadtxt(corr_file('positional_theta=.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
-                if np.max(y) > max_y_pos:
+                if np.nanmax(y) > max_y_pos:
                     max_y_pos = np.max(y)
-                    x_pos = x[np.argmax(y)]
+                    x_pos = x[np.nanargmax(y)]
                 plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
