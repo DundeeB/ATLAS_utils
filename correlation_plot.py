@@ -45,7 +45,6 @@ def main():
                 if np.nanmax(y) > max_y_psi:
                     max_y_psi = np.nanmax(y)
                     x_psi = x[np.nanargmax(y)]
-                    print(x_psi)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'), usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
