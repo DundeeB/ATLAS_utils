@@ -50,6 +50,7 @@ def main():
                 if np.max(y) > max_y_psi:
                     max_y_psi = np.max(y)
                     x_psi = x[np.argmax(y)]
+                    print(x_psi)
                 plt.subplot(212)
                 x, y = np.loadtxt(corr_file('positional_theta=.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
                 if np.max(y) > max_y_pos:
