@@ -43,7 +43,7 @@ def main():
                 lbl = f if args.legends is None else args.legends[i]
                 plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                 if np.nanmax(y) > max_y_psi:
-                    max_y_psi = np.max(y)
+                    max_y_psi = np.nanmax(y)
                     x_psi = x[np.nanargmax(y)]
                     print(x_psi)
                 if args.upper:
@@ -54,7 +54,7 @@ def main():
                 plt.subplot(212)
                 x, y = np.loadtxt(corr_file('positional_theta=.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
                 if np.nanmax(y) > max_y_pos:
-                    max_y_pos = np.max(y)
+                    max_y_pos = np.nanmax(y)
                     x_pos = x[np.nanargmax(y)]
                 plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                 if args.upper:
