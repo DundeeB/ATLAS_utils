@@ -58,7 +58,7 @@ def main():
                 if np.nanmax(y) > max_y_pos:
                     max_y_pos = np.nanmax(y)
                     x_pos = x[np.nanargmax(y)]
-                if ~args.no_bilalyer:
+                if ~args.no_bilayer:
                     plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
