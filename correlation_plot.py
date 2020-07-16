@@ -17,6 +17,8 @@ def main():
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default='23', help='mn=14 or 23')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations')
+    parser.add_argument('-nbl', '--no_bilayer', type=bool, nargs='?', const=True, default=False,
+                        help='plot upper correlations')
     parser.add_argument('-p', '--poly', type=str, nargs='?', const=True, default=False, help='add polynomial decay')
 
     args = parser.parse_args()
@@ -38,10 +40,11 @@ def main():
             corr_file = lambda s: f + '/OP/' + [file for file in os.listdir(f + '/OP/') if re.match(s, file)][0]
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
+                lbl = f if args.legends is None else args.legends[i]
                 x, y = np.loadtxt(corr_file('psi_' + args.psis_mn + '_corr.*'), usecols=(x_col - 1, y_col - 1),
                                   unpack=True)
-                lbl = f if args.legends is None else args.legends[i]
-                plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
+                if ~args.no_bilayer:
+                    plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                 if np.nanmax(y) > max_y_psi:
                     max_y_psi = np.nanmax(y)
                     x_psi = x[np.nanargmax(y)]
@@ -55,7 +58,8 @@ def main():
                 if np.nanmax(y) > max_y_pos:
                     max_y_pos = np.nanmax(y)
                     x_pos = x[np.nanargmax(y)]
-                plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
+                if ~args.no_bilalyer:
+                    plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
