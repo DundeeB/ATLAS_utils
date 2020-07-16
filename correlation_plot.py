@@ -43,7 +43,7 @@ def main():
                 lbl = f if args.legends is None else args.legends[i]
                 x, y = np.loadtxt(corr_file('psi_' + args.psis_mn + '_corr.*'), usecols=(x_col - 1, y_col - 1),
                                   unpack=True)
-                if ~args.no_bilayer:
+                if not args.no_bilayer:
                     plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                 if np.nanmax(y) > max_y_psi:
                     max_y_psi = np.nanmax(y)
@@ -58,7 +58,7 @@ def main():
                 if np.nanmax(y) > max_y_pos:
                     max_y_pos = np.nanmax(y)
                     x_pos = x[np.nanargmax(y)]
-                if ~args.no_bilayer:
+                if not args.no_bilayer:
                     plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                 if args.upper:
                     x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
