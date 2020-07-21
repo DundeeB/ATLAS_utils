@@ -39,8 +39,8 @@ for f in args.files:
                 x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
                 up = np.where(z > np.mean(z))
                 down = np.where(z <= np.mean(z))
-                plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
-                plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
+                plt.plot(x[up], y[up], s, label=lbl + ' up', linewidth=2, markersize=6)
+                plt.plot(x[down], y[down], s, label=lbl + ' down', linewidth=2, markersize=6)
             else:
                 plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
         i += 1
