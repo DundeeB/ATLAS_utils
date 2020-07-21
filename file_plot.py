@@ -14,6 +14,8 @@ parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='l
 parser.add_argument('-neq', '--not_equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
 parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False, help='axis equal')
 parser.add_argument('-m1', '--minus_one', type=bool, nargs='?', const=True, default=False, help='axis equal')
+parser.add_argument('-z', '--z_colour', type=bool, nargs='?', const=True, default=False,
+                    help='colour upper and lower spheres with different colours')
 
 args = parser.parse_args()
 n_xy = max([len(args.x_column), len(args.y_column)])
@@ -33,7 +35,14 @@ for f in args.files:
         if args.loglog:
             plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
         else:
-            plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+            if args.z_colour:
+                x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
+                up = np.where(z > np.mean(z))
+                down = np.where(z <= np.mean(z))
+                plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
+                plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
+            else:
+                plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
         i += 1
 plt.grid()
 plt.legend()
