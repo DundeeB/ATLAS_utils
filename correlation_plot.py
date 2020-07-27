@@ -41,8 +41,8 @@ def main():
         try:
             phi_files = lambda s: [file for file in os.listdir(f + '/OP/') if re.match(s, file)]
             phi_reals = lambda s: [int(re.split('\.', re.split('_', f)[-1])[0]) for f in relevent_files(s)]
-            relevent_files = lambda s: phi_files(s) if args.all else phi_files(s)[-1]
-            relevent_reals = lambda s: phi_reals(s) if args.all else phi_reals(s)[-1]
+            relevent_files = lambda s: phi_files(s) if args.all else [phi_files(s)[-1]]
+            relevent_reals = lambda s: phi_reals(s) if args.all else [phi_reals(s)[-1]]
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
                 s = 'psi_' + args.psis_mn + '_corr.*'
