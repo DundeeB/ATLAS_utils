@@ -52,9 +52,9 @@ def main():
                         lbl += ' ' + str(real)
                     x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
+                    print(lbl)
                     if not args.no_bilayer:
                         plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
-                    plt.loglog(x, y, '-')
                     if np.nanmax(y) > max_y_psi:
                         max_y_psi = np.nanmax(y)
                         x_psi = x[np.nanargmax(y)]
