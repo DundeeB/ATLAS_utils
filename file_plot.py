@@ -46,7 +46,6 @@ for f in args.files:
             plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
         else:
             plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
-        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=12)
         i += 1
 plt.grid()
 plt.legend()
