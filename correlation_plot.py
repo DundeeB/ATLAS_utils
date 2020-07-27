@@ -20,6 +20,8 @@ def main():
     parser.add_argument('-nbl', '--no_bilayer', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations')
     parser.add_argument('-p', '--poly', type=str, nargs='?', const=True, default=False, help='add polynomial decay')
+    parser.add_argument('-a', '--all', type=str, nargs='?', const=True, default=False,
+                        help='plot all files in OP files or just the last configuration analysis')
 
     args = parser.parse_args()
     n_xy = max([len(args.x_column), len(args.y_column)])
@@ -37,33 +39,46 @@ def main():
     max_y_psi, max_y_pos, x_psi, x_pos = 0, 0, 0, 0
     for f in args.files:
         try:
-            corr_file = lambda s: f + '/OP/' + [file for file in os.listdir(f + '/OP/') if re.match(s, file)][0]
+            phi_files = lambda s: [file for file in os.listdir(f + '/OP/') if re.match(s, file)]
+            phi_reals = lambda s: [int(re.split('\.', re.split('_', f)[-1])[0]) for f in relevent_files(s)]
+            relevent_files = lambda s: phi_files(s) if args.all else phi_files(s)[-1]
+            relevent_reals = lambda s: phi_reals(s) if args.all else phi_reals(s)[-1]
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
-                lbl = f if args.legends is None else args.legends[i]
-                x, y = np.loadtxt(corr_file('psi_' + args.psis_mn + '_corr.*'), usecols=(x_col - 1, y_col - 1),
-                                  unpack=True)
-                if not args.no_bilayer:
-                    plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
-                if np.nanmax(y) > max_y_psi:
-                    max_y_psi = np.nanmax(y)
-                    x_psi = x[np.nanargmax(y)]
-                if args.upper:
-                    x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'), usecols=(x_col - 1, y_col - 1),
+                s = 'psi_' + args.psis_mn + '_corr.*'
+                for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
+                    lbl = f if args.legends is None else args.legends[i]
+                    if args.all:
+                        lbl += ' ' + str(real)
+                    x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
-                    plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
-                               markersize=6)
+                    if not args.no_bilayer:
+                        plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
+                    if np.nanmax(y) > max_y_psi:
+                        max_y_psi = np.nanmax(y)
+                        x_psi = x[np.nanargmax(y)]
+                    if args.upper:
+                        x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'),
+                                          usecols=(x_col - 1, y_col - 1),
+                                          unpack=True)
+                        plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
+                                   markersize=6)
                 plt.subplot(212)
-                x, y = np.loadtxt(corr_file('positional_theta=.*'), usecols=(x_col - 1, y_col - 1), unpack=True)
-                if np.nanmax(y) > max_y_pos:
-                    max_y_pos = np.nanmax(y)
-                    x_pos = x[np.nanargmax(y)]
-                if not args.no_bilayer:
-                    plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
-                if args.upper:
-                    x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
-                                      unpack=True)
-                    plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
+                s = 'positional_theta=.*'
+                for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
+                    x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
+                    lbl = f if args.legends is None else args.legends[i]
+                    if args.all:
+                        lbl += ' ' + str(real)
+                    if np.nanmax(y) > max_y_pos:
+                        max_y_pos = np.nanmax(y)
+                        x_pos = x[np.nanargmax(y)]
+                    if not args.no_bilayer:
+                        plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
+                    if args.upper:
+                        x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
+                                          unpack=True)
+                        plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
 
                 i += 1
         except Exception as err:
