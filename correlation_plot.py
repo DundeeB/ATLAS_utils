@@ -44,15 +44,14 @@ def main():
             relevent_files = lambda s: phi_files(s) if args.all else [phi_files(s)[-1]]
             relevent_reals = lambda s: phi_reals(s) if args.all else [phi_reals(s)[-1]]
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
-                plt.subplot(211)
                 pattern = 'psi_' + args.psis_mn + '_corr.*'
                 for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
+                    plt.subplot(211)
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
                         lbl += ' ' + str(real)
                     x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
-                    print(lbl)
                     if not args.no_bilayer:
                         plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                     if np.nanmax(y) > max_y_psi:
@@ -64,9 +63,9 @@ def main():
                         x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                         plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                    markersize=6)
-                plt.subplot(212)
                 pattern = 'positional_theta=.*'
                 for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
+                    plt.subplot(212)
                     x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
