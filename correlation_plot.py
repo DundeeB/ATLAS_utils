@@ -18,7 +18,7 @@ def main():
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations')
     parser.add_argument('-nbl', '--no_bilayer', type=bool, nargs='?', const=True, default=False,
-                        help='plot upper correlations')
+                        help='')
     parser.add_argument('-p', '--poly', type=str, nargs='?', const=True, default=False, help='add polynomial decay')
     parser.add_argument('-a', '--all', type=str, nargs='?', const=True, default=False,
                         help='plot all files in OP files or just the last configuration analysis')
@@ -46,6 +46,7 @@ def main():
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
                 s = 'psi_' + args.psis_mn + '_corr.*'
+                print(relevent_reals(s))
                 for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
@@ -58,9 +59,9 @@ def main():
                         max_y_psi = np.nanmax(y)
                         x_psi = x[np.nanargmax(y)]
                     if args.upper:
-                        x, y = np.loadtxt(corr_file('upper_psi_1' + str(m * n) + '_corr.*'),
-                                          usecols=(x_col - 1, y_col - 1),
-                                          unpack=True)
+                        s = 'upper_psi_1' + str(m * n) + '_corr.*'
+                        corr_file = relevent_files(s)[np.find(real == relevent_reals(s))]
+                        x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                         plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                    markersize=6)
                 plt.subplot(212)
@@ -76,7 +77,9 @@ def main():
                     if not args.no_bilayer:
                         plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                     if args.upper:
-                        x, y = np.loadtxt(corr_file('upper_positional_theta=.*'), usecols=(x_col - 1, y_col - 1),
+                        s = 'upper_positional_theta=.*'
+                        corr_file = relevent_files(s)[np.find(real == relevent_reals(s))]
+                        x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1),
                                           unpack=True)
                         plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
 
