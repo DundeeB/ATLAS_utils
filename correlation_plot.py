@@ -48,11 +48,11 @@ def main():
                 s = 'psi_' + args.psis_mn + '_corr.*'
                 for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
                     lbl = f if args.legends is None else args.legends[i]
-                    print(corr_file)
                     if args.all:
                         lbl += ' ' + str(real)
                     x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
                                       unpack=True)
+                    plt.loglog(x, y, '-')
                     if not args.no_bilayer:
                         plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                     if np.nanmax(y) > max_y_psi:
