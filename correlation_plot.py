@@ -46,9 +46,9 @@ def main():
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
                 s = 'psi_' + args.psis_mn + '_corr.*'
-                print(relevent_reals(s))
                 for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
                     lbl = f if args.legends is None else args.legends[i]
+                    print(corr_file)
                     if args.all:
                         lbl += ' ' + str(real)
                     x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
