@@ -45,8 +45,8 @@ def main():
             relevent_reals = lambda s: phi_reals(s) if args.all else [phi_reals(s)[-1]]
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 plt.subplot(211)
-                s = 'psi_' + args.psis_mn + '_corr.*'
-                for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
+                pattern = 'psi_' + args.psis_mn + '_corr.*'
+                for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
                         lbl += ' ' + str(real)
@@ -59,14 +59,14 @@ def main():
                         max_y_psi = np.nanmax(y)
                         x_psi = x[np.nanargmax(y)]
                     if args.upper:
-                        s = 'upper_psi_1' + str(m * n) + '_corr.*'
-                        corr_file = relevent_files(s)[np.find(real == relevent_reals(s))]
+                        pattern = 'upper_psi_1' + str(m * n) + '_corr.*'
+                        corr_file = relevent_files(pattern)[np.find(real == relevent_reals(pattern))]
                         x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                         plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                    markersize=6)
                 plt.subplot(212)
-                s = 'positional_theta=.*'
-                for corr_file, real in zip(relevent_files(s), relevent_reals(s)):
+                pattern = 'positional_theta=.*'
+                for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
                     x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
@@ -77,8 +77,8 @@ def main():
                     if not args.no_bilayer:
                         plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                     if args.upper:
-                        s = 'upper_positional_theta=.*'
-                        corr_file = relevent_files(s)[np.find(real == relevent_reals(s))]
+                        pattern = 'upper_positional_theta=.*'
+                        corr_file = relevent_files(pattern)[np.find(real == relevent_reals(pattern))]
                         x, y = np.loadtxt(corr_file, usecols=(x_col - 1, y_col - 1),
                                           unpack=True)
                         plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
