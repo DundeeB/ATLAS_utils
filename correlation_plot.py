@@ -59,7 +59,7 @@ def main():
                         x_psi = x[np.nanargmax(y)]
                     if args.upper:
                         pattern = 'upper_psi_1' + str(m * n) + '_corr.*'
-                        corr_file = relevent_files(pattern)[np.find(real == relevent_reals(pattern))]
+                        corr_file = relevent_files(pattern)[np.where(real == relevent_reals(pattern))]
                         x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
                         plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                    markersize=6)
@@ -77,7 +77,7 @@ def main():
                         plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
                     if args.upper:
                         pattern = 'upper_positional_theta=.*'
-                        corr_file = relevent_files(pattern)[np.find(real == relevent_reals(pattern))]
+                        corr_file = relevent_files(pattern)[np.where(real == relevent_reals(pattern))]
                         x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
                                           unpack=True)
                         plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
