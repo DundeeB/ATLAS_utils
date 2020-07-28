@@ -60,5 +60,7 @@ params = {'legend.fontsize': 'large',
           'ytick.labelsize': size*0.75,
           'axes.titlepad': 25}
 plt.rcParams.update(params)
+if not args.not_equal:
+    plt.axis('equal')
 plt.show()
 
