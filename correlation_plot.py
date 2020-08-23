@@ -46,7 +46,7 @@ def main():
             for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
                 pattern = 'psi_' + args.psis_mn + '_corr.*'
                 for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
-                    plt.subplot(211)
+                    # plt.subplot(211)
                     lbl = f if args.legends is None else args.legends[i]
                     if args.all:
                         lbl += ' ' + str(real)
@@ -64,28 +64,28 @@ def main():
                         plt.loglog(x, y, s, label=lbl + ', upper layer $\psi_{1' + str(m * n) + '}$', linewidth=2,
                                    markersize=6)
                 pattern = 'positional_theta=.*'
-                for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
-                    plt.subplot(212)
-                    x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
-                    lbl = f if args.legends is None else args.legends[i]
-                    if args.all:
-                        lbl += ' ' + str(real)
-                    if np.nanmax(y) > max_y_pos:
-                        max_y_pos = np.nanmax(y)
-                        x_pos = x[np.nanargmax(y)]
-                    if not args.no_bilayer:
-                        plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
-                    if args.upper:
-                        pattern = 'upper_positional_theta=.*'
-                        corr_file = relevent_files(pattern)[np.where(np.array(relevent_reals(pattern)) == real)[0][0]]
-                        x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
-                                          unpack=True)
-                        plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
+                # for corr_file, real in zip(relevent_files(pattern), relevent_reals(pattern)):
+                #     plt.subplot(212)
+                #     x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1), unpack=True)
+                #     lbl = f if args.legends is None else args.legends[i]
+                #     if args.all:
+                #         lbl += ' ' + str(real)
+                #     if np.nanmax(y) > max_y_pos:
+                #         max_y_pos = np.nanmax(y)
+                #         x_pos = x[np.nanargmax(y)]
+                #     if not args.no_bilayer:
+                #         plt.loglog(x, y - 1, s, label=lbl + ', g($\Delta$x,0)', linewidth=2, markersize=6)
+                #     if args.upper:
+                #         pattern = 'upper_positional_theta=.*'
+                #         corr_file = relevent_files(pattern)[np.where(np.array(relevent_reals(pattern)) == real)[0][0]]
+                #         x, y = np.loadtxt(f + '/OP/' + corr_file, usecols=(x_col - 1, y_col - 1),
+                #                           unpack=True)
+                #         plt.loglog(x, y - 1, s, label=lbl + ', upper layer g($\Delta$x,0)', linewidth=2, markersize=6)
 
                 i += 1
         except Exception as err:
             print(err)
-    plt.subplot(211)
+    # plt.subplot(211)
     if args.poly:
         plt.loglog(x, max_y_psi * np.power(np.array(x) / x_psi, -1.0 / 4), '--', label='$x^{-1/4}$')
     plt.grid()
@@ -104,24 +104,24 @@ def main():
     if args.equal:
         plt.axis('equal')
 
-    plt.subplot(212)
-    if args.poly:
-        plt.loglog(x, max_y_pos * np.power(np.array(x) / x_pos, -1.0 / 3), '--', label='$x^{-1/3}$')
-    plt.grid()
-    plt.legend()
-    plt.xlabel('$\Delta$x [$\sigma$=2]')
-    plt.ylabel('Positional correlation')
-    size = 15
-    params = {'legend.fontsize': 'large',
-              'figure.figsize': (20, 8),
-              'axes.labelsize': size,
-              'axes.titlesize': size,
-              'xtick.labelsize': size * 0.75,
-              'ytick.labelsize': size * 0.75,
-              'axes.titlepad': 25}
-    plt.rcParams.update(params)
-    if args.equal:
-        plt.axis('equal')
+    # plt.subplot(212)
+    # if args.poly:
+    #     plt.loglog(x, max_y_pos * np.power(np.array(x) / x_pos, -1.0 / 3), '--', label='$x^{-1/3}$')
+    # plt.grid()
+    # plt.legend()
+    # plt.xlabel('$\Delta$x [$\sigma$=2]')
+    # plt.ylabel('Positional correlation')
+    # size = 15
+    # params = {'legend.fontsize': 'large',
+    #           'figure.figsize': (20, 8),
+    #           'axes.labelsize': size,
+    #           'axes.titlesize': size,
+    #           'xtick.labelsize': size * 0.75,
+    #           'ytick.labelsize': size * 0.75,
+    #           'axes.titlepad': 25}
+    # plt.rcParams.update(params)
+    # if args.equal:
+    #     plt.axis('equal')
 
     plt.show()
 
