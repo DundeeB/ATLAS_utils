@@ -22,7 +22,7 @@ def main():
     args = parser.parse_args()
     if len(args.style) == 1:
         args.style = [args.style[0] for _ in args.folders]
-    if len(args.labels) is None:
+    if args.labels is None:
         args.labels = args.folders
 
     m = int(args.psis_mn[0])
