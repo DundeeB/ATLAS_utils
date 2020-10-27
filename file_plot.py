@@ -29,7 +29,11 @@ if len(args.style) == 1:
 i = 0
 for f in args.files:
     for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
-        x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
+        try:
+            x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
+        except ValueError:
+            x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True, dtype=complex)
+            x, y = np.abs(x), np.abs(y)
         y = y - 1 if args.minus_one else y
         lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
         if args.loglog:
