@@ -52,7 +52,12 @@ def main():
             relevant_reals = phi_reals if args.all else [phi_reals[i_m]]
             for corr_file, real in zip(relevant_files, relevant_reals):
                 lbl_ = lbl + ' ' + str(real) if args.all else lbl
-                x, y = np.loadtxt(f + '/OP/psi_' + args.psis_mn + '/' + corr_file, usecols=(0, 1), unpack=True)
+                try:
+                    x, y = np.loadtxt(f + '/OP/psi_' + args.psis_mn + '/' + corr_file, usecols=(0, 1), unpack=True)
+                except ValueError:
+                    x, y = np.loadtxt(f + '/OP/psi_' + args.psis_mn + '/' + corr_file, usecols=(0, 1), unpack=True,
+                                      dtype=complex)
+                    x, y = np.abs(x), np.abs(y)
                 if not args.only_upper:
                     plt.loglog(x, y, s, label=lbl + ', $\psi_{' + args.psis_mn + '}$', linewidth=2, markersize=6)
                 if np.nanmax(y) > max_y_psi:
