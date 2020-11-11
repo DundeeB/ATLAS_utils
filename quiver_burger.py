@@ -46,7 +46,7 @@ def main():
         up = np.where(sp[:, 2] > np.mean(sp[:, 2]))
         down = np.where(sp[:, 2] <= np.mean(sp[:, 2]))
         plt.plot(sp[:, 0][up], sp[:, 1][up], '.', markersize=6, label=lbl + ' up')
-        plt.plot(sp[:, 0][down], sp[:, 1][down], '.', markersize=6, label=lbl + ' up')
+        plt.plot(sp[:, 0][down], sp[:, 1][down], '.', markersize=6, label=lbl + ' down')
     else:
         plt.plot(sp[:, 0], sp[:, 1], '.', markersize=6, label=lbl)
     plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1,
