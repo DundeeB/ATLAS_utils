@@ -1,5 +1,4 @@
 #!/Local/cmp/anaconda3/bin/python -u
-
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
@@ -41,8 +40,7 @@ def main():
     plt.xlabel('x')
     plt.ylabel('y')
     plt.plot(sp[:, 0], sp[:, 1], '.', markersize=6)
-    print(burg.size)
-    plt.quiver([burg[:, 0], burg[:, 1]], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1)
+    plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1)
     plt.legend('Center\'s xy for realization ' + str(real_num), 'Burger field')
     plt.axis('equal')
 
