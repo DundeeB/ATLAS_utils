@@ -53,6 +53,7 @@ def main():
                label='Burger field')
     plt.legend()
     plt.axis('equal')
+    plt.title(arg.folder)
 
     # show
     plt.show()
