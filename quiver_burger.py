@@ -1,3 +1,5 @@
+#!/Local/cmp/anaconda3/bin/python -u
+
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
@@ -9,7 +11,7 @@ import re
 def main():
     # parse
     parser = argparse.ArgumentParser(description='plot options')
-    parser.add_argument('-f', '--folder', type=str, nargs='?', help='folders to plot simulation result from')
+    parser.add_argument('-f', '--folder', type=str, nargs='+', help='folders to plot simulation result from')
     parser.add_argument('-r', '--real', type=str, nargs='?', default='',
                         help='Realization to plot. Default is last realization')
 
@@ -22,7 +24,7 @@ def main():
     real_num = int(re.split('(vec_|\.txt)', args.real)[2])
     real_fold = join(burg_fold, args.real)
     burg = np.loadtxt(real_fold)
-    sp = np.loadtxt(join(args.folder), str(real_num))
+    sp = np.loadtxt(join(args.folder, str(real_num)))
 
     # font
     size = 15
@@ -41,6 +43,7 @@ def main():
     plt.plot(sp[:, 0], sp[:, 1], '.', markersize=6)
     plt.quiver([burg[:, 0], burg[:, 1]], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1)
     plt.legend('Center\'s xy for realization ' + str(real_num), 'Burger field')
+    plt.axis('equal')
 
     # show
     plt.show()
