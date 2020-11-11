@@ -41,15 +41,17 @@ def main():
     # graphs
     plt.xlabel('x')
     plt.ylabel('y')
+    lbl = 'Center\'s xy for realization ' + str(real_num)
     if args.z_colour:
         up = np.where(sp[:, 2] > np.mean(sp[:, 2]))
         down = np.where(sp[:, 2] <= np.mean(sp[:, 2]))
-        plt.plot(sp[:, 0][up], sp[:, 1][up], '.', markersize=6)
-        plt.plot(sp[:, 0][down], sp[:, 1][down], '.', markersize=6)
+        plt.plot(sp[:, 0][up], sp[:, 1][up], '.', markersize=6, label=lbl + ' up')
+        plt.plot(sp[:, 0][down], sp[:, 1][down], '.', markersize=6, label=lbl + ' up')
     else:
-        plt.plot(sp[:, 0], sp[:, 1], '.', markersize=6)
-    plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1)
-    plt.legend('Center\'s xy for realization ' + str(real_num), 'Burger field')
+        plt.plot(sp[:, 0], sp[:, 1], '.', markersize=6, label=lbl)
+    plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy', scale=1,
+               label='Burger field')
+    plt.legend()
     plt.axis('equal')
 
     # show
