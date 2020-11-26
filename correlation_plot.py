@@ -20,7 +20,11 @@ def main():
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='style of lines')
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
-                        help='plot upper correlations')
+                        help='plot upper correlations for psi_mn')
+    parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
+                        help='plot Bragg correlation e^ikr at k peak')
+    parser.add_argument('-bsm', '--bragg_sm', type=bool, nargs='?', const=True, default=False,
+                        help='plot magnetic Bragg correlation z*e^ikr at k peak of magentic')
     parser.add_argument('-nbl', '--only_upper', type=bool, nargs='?', const=True, default=False, help='')
     parser.add_argument('-a', '--all', type=str, nargs='?', const=True, default=False,
                         help='plot all files in OP files (In comparison with just the last configuration)')
@@ -39,6 +43,10 @@ def main():
             op_dirs.append('psi_' + args.psis_mn)
         if args.upper or args.only_upper:
             op_dirs.append('upper_psi_1' + str(m * n))
+    if args.bragg_s:
+        op_dirs.append('Bragg_S')
+    if args.bragg_sm:
+        op_dirs.append('Bragg_Sm')
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
@@ -60,7 +68,7 @@ def main():
                     relevant_reals.append(last_real)
                 for corr_file, real in zip(relevant_files, relevant_reals):
                     lbl_ = lbl + ', ' + op_dir
-                    if not args.all:
+                    if args.all:
                         lbl_ = lbl_ + ', real ' + str(real)
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
