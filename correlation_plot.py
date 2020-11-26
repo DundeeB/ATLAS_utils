@@ -18,8 +18,10 @@ def prepare_lbl(lbl):
     for mn in ['14', '23', '16']:
         lbl = re.sub('psi ' + mn, '$\\\psi_{' + mn + '}$', lbl)
     lbl = re.sub('rhoH', '$\\\\rho_H$', lbl)
-    lbl = re.sub('Bragg_Sm', '$S_m(k^{peak})$', lbl)
-    lbl = re.sub('Bragg_S', '$S(k^{peak})$', lbl)
+    lbl = re.sub('Bragg Sm', '$S_m(k^{peak})$', lbl)
+    lbl = re.sub('Bragg S', '$S(k^{peak})$', lbl)
+    for N, N_ in zip(['10000', '40000', '90000'], ['1e4', '4e4', '9e4']):
+        lbl = re.sub(N, N_, lbl)
     return lbl
 
 
