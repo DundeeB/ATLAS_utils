@@ -13,6 +13,12 @@ def get_corr_files(OP_sub_dir):
     return phi_files[i_m], phi_reals[i_m], phi_files, phi_reals
 
 
+def prepare_lbl(lbl):
+    lbl = re.sub('_',' ',lbl)
+    lbl = re.sub('psi mn', '$\\psi_{mn}$', lbl)
+    lbl = re.sub('rho', '$\\rho$', lbl)
+    return lbl
+
 def main():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
@@ -70,6 +76,7 @@ def main():
                     lbl_ = lbl + ', ' + op_dir
                     if args.all:
                         lbl_ = lbl_ + ', real ' + str(real)
+                    lbl_ = prepare_lbl(lbl_)
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
