@@ -14,10 +14,13 @@ def get_corr_files(OP_sub_dir):
 
 
 def prepare_lbl(lbl):
-    lbl = re.sub('_',' ',lbl)
+    lbl = re.sub('_', ' ', lbl)
     lbl = re.sub('psi mn', '$\\psi_{mn}$', lbl)
     lbl = re.sub('rho', '$\\rho$', lbl)
+    lbl = re.sub('Bragg_S', '$S(k^{peak})$', lbl)
+    lbl = re.sub('Bragg_Sm', '$S_m(k^{peak})$', lbl)
     return lbl
+
 
 def main():
     parser = argparse.ArgumentParser(description='plot options')
@@ -76,14 +79,13 @@ def main():
                     lbl_ = lbl + ', ' + op_dir
                     if args.all:
                         lbl_ = lbl_ + ', real ' + str(real)
-                    lbl_ = prepare_lbl(lbl_)
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
-                    plt.loglog(x, y, s, label=lbl_, linewidth=2, markersize=6)
+                    plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
             except Exception as err:
                 print(err)
     plt.grid()
