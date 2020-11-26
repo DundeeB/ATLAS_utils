@@ -45,10 +45,10 @@ def main():
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
     plt.figure()
-    relevant_files = []
-    relevant_reals = []
     for f, s, lbl in zip(args.folders, args.style, args.labels):
         for op_dir in op_dirs:
+            relevant_files = []
+            relevant_reals = []
             try:
                 last_file, last_real, phi_files, phi_reals = get_corr_files(f + '/OP/' + op_dir + '/')
                 if args.all:
