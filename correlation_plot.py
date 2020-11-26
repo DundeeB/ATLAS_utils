@@ -16,8 +16,8 @@ def get_corr_files(OP_sub_dir):
 def prepare_lbl(lbl):
     lbl = re.sub('_', ' ', lbl)
     for mn in ['14', '23', '16']:
-        lbl = re.sub('psi ' + mn, '$\\\psi_{' + mn + '}\\$', lbl)
-    lbl = re.sub('rho', '$\\rho$', lbl)
+        lbl = re.sub('psi ' + mn, '$\\\psi_{' + mn + '}$', lbl)
+    lbl = re.sub('rhoH', '$\\\\rho_H$', lbl)
     lbl = re.sub('Bragg_Sm', '$S_m(k^{peak})$', lbl)
     lbl = re.sub('Bragg_S', '$S(k^{peak})$', lbl)
     return lbl
