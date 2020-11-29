@@ -5,6 +5,7 @@ import argparse
 from os.path import join
 import os
 import re
+from correlation_plot import get_corr_files
 
 
 def main():
@@ -20,8 +21,7 @@ def main():
     args = parser.parse_args()
     burg_fold = join(args.folder, 'OP/burger_vectors')
     if args.real == '':
-        reals = [int(re.split('(vec_|\.txt)', r)[2]) for r in os.listdir(burg_fold) if re.search('vec_\\d*.txt', r)]
-        args.real = 'vec_' + str(max(reals)) + '.txt'
+        args.real, _, _, _ = get_corr_files(burg_fold)
     real_num = int(re.split('(vec_|\.txt)', args.real)[2])
     real_fold = join(burg_fold, args.real)
     burg = np.loadtxt(real_fold)

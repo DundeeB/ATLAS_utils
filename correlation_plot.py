@@ -22,6 +22,7 @@ def prepare_lbl(lbl):
     lbl = re.sub('Bragg S', '$S(k^{peak})$', lbl)
     for N, N_ in zip(['10000', '40000', '90000'], ['1e4', '4e4', '9e4']):
         lbl = re.sub(N, N_, lbl)
+    lbl = re.sub('\,', ',', lbl)
     return lbl
 
 
