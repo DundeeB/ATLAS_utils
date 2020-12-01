@@ -12,7 +12,7 @@ from mpl_toolkits import mplot3d
 def main():
     # parse
     parser = argparse.ArgumentParser(description='plot options')
-    parser.add_argument('-f', '--folder', type=str, nargs='?', help='folders to plot simulation result from')
+    parser.add_argument('-f', '--folder', type=str, nargs='+', help='folders to plot simulation result from')
     parser.add_argument('-r', '--real', type=str, nargs='?', default='',
                         help='Realization to plot. Default is last realization')
 
