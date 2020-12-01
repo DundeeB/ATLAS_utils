@@ -39,8 +39,10 @@ def main():
     parser.add_argument('-bsm', '--bragg_sm', type=bool, nargs='?', const=True, default=False,
                         help='plot magnetic Bragg correlation z*e^ikr at k peak of magentic')
     parser.add_argument('-nbl', '--only_upper', type=bool, nargs='?', const=True, default=False, help='')
-    parser.add_argument('-a', '--all', type=str, nargs='?', const=True, default=False,
+    parser.add_argument('-a', '--all', type=bool, nargs='?', const=True, default=False,
                         help='plot all files in OP files (In comparison with just the last configuration)')
+    parser.add_argument('-abs', '--abs', type=bool, nargs='?', const=True, default=False,
+                        help='plot |corr|')
 
     args = parser.parse_args()
     if len(args.style) == 1:
@@ -86,6 +88,8 @@ def main():
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
+                        if args.abs:
+                            y = np.abs(y)
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
