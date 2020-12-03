@@ -40,10 +40,10 @@ def main():
         kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real + ".txt"), unpack=True, usecols=(0, 1, 2))
         # graphs
         ax = axs[sub]
+        line = ax.scatter(kx, ky, S_values, '.')
         if sub == 0:
             # ax.set_title(args.folder)
-            ax.legend(args.folder)
-        ax.scatter(kx, ky, S_values, '.')
+            line.legend(args.folder)
         ax.set_xlabel('$k_x$')
         ax.set_ylabel('$k_y$')
         ax.set_zlabel(lbl)
