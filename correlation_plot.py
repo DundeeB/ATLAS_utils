@@ -97,7 +97,7 @@ def main():
                         if args.abs:
                             y = np.abs(y)
                         if op_dir == "pos":
-                            y = y - 1
+                            y = y - 1 if not args.abs else np.abs(y - 1)
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
