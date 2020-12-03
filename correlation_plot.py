@@ -95,7 +95,8 @@ def main():
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
                         if op_dir == "pos":
-                            y = y - 1
+                            I = np.where(y != 0)
+                            y[I] = y[I] - 1
                         if args.abs:
                             y = np.abs(y)
                     except ValueError:
