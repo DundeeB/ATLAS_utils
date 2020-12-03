@@ -41,7 +41,8 @@ def main():
         # graphs
         ax = axs[sub]
         if sub == 0:
-            ax.set_title(args.folder)
+            # ax.set_title(args.folder)
+            ax.legend(args.folder)
         ax.scatter(kx, ky, S_values, '.')
         ax.set_xlabel('$k_x$')
         ax.set_ylabel('$k_y$')
