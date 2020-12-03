@@ -47,8 +47,11 @@ def main():
             ax.set_xlabel('$k_x$')
             ax.set_ylabel('$k_y$')
             ax.set_zlabel(lbl)
-    plt.title(args.folder)
-
+    plt.subplot(211)
+    if len(args.folders) == 1:
+        plt.title(fold)
+    else:
+        plt.legend(args.folders)
     # show
     plt.show()
 
