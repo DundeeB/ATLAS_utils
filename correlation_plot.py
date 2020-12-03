@@ -94,11 +94,10 @@ def main():
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
-                        if op_dir == "pos":
-                            I = np.where(y != 0)
-                            y[I] = y[I] - 1
                         if args.abs:
                             y = np.abs(y)
+                        if op_dir == "pos":
+                            y = y - 1
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
