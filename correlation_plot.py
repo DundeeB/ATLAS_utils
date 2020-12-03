@@ -94,6 +94,8 @@ def main():
                     corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
+                        if op_dir == "pos":
+                            y = y - 1
                         if args.abs:
                             y = np.abs(y)
                     except ValueError:
