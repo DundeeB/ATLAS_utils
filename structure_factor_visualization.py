@@ -12,7 +12,7 @@ from mpl_toolkits import mplot3d
 def main():
     # parse
     parser = argparse.ArgumentParser(description='plot options')
-    parser.add_argument('-f', '--folder', type=str, nargs='?', help='folders to plot simulation result from')
+    parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
     parser.add_argument('-r', '--real', type=str, nargs='?', default='',
                         help='Realization to plot. Default is last realization')
 
@@ -31,22 +31,25 @@ def main():
               'axes.titlepad': 25}
     plt.rcParams.update(params)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
-    op_fold = join(args.folder, 'OP/Bragg_S')
-    for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S$', '$S_m$'], [0, 1]):
-        if args.real == '':
-            phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
-            phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
-            args.real = str(np.max(phi_reals))
-        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real + ".txt"), unpack=True, usecols=(0, 1, 2))
-        # graphs
-        ax = axs[sub]
-        ax.scatter(kx, ky, S_values, '.', label=args.folder)
-        if sub == 0:
-            ax.set_title(args.folder)
-            ax.legend()
-        ax.set_xlabel('$k_x$')
-        ax.set_ylabel('$k_y$')
-        ax.set_zlabel(lbl)
+    for fold in args.folders:
+        op_fold = join(fold, 'OP/Bragg_S')
+        for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S$', '$S_m$'], [0, 1]):
+            if args.real == '':
+                phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
+                phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
+                args.real = str(np.max(phi_reals))
+            kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real + ".txt"), unpack=True, usecols=(0, 1, 2))
+            # graphs
+            ax = axs[sub]
+            ax.scatter(kx, ky, S_values, '.', label=fold)
+            if sub == 0:
+                if len(args.folders) == 1:
+                    ax.set_title(fold)
+                else:
+                    ax.legend()
+            ax.set_xlabel('$k_x$')
+            ax.set_ylabel('$k_y$')
+            ax.set_zlabel(lbl)
     plt.show()
 
 
