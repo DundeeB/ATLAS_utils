@@ -32,16 +32,16 @@ def main():
     plt.rcParams.update(params)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
     op_fold = join(args.folder, 'OP/Bragg_S')
-    for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
+    for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S$', '$S_m$'], [0, 1]):
         if args.real == '':
             phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
             phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
             args.real = str(np.max(phi_reals))
-        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real+".txt"), unpack=True, usecols=(0, 1, 2))
-        if sub == 0:
-            plt.legend(args.folder)
+        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real + ".txt"), unpack=True, usecols=(0, 1, 2))
         # graphs
         ax = axs[sub]
+        if sub == 0:
+            plt.legend(args.folder)
         ax.scatter(kx, ky, S_values, '.')
         ax.set_xlabel('$k_x$')
         ax.set_ylabel('$k_y$')
