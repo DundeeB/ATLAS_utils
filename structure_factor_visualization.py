@@ -19,31 +19,27 @@ def main():
     # handle defaults and load data
     args = parser.parse_args()
     fig = plt.figure()
+
+    # font
+    size = 15
+    params = {'legend.fontsize': 'large',
+              'figure.figsize': (20, 8),
+              'axes.labelsize': size,
+              'axes.titlesize': size,
+              'xtick.labelsize': size * 0.75,
+              'ytick.labelsize': size * 0.75,
+              'axes.titlepad': 25}
+    plt.rcParams.update(params)
+    axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
     for fold in args.folders:
         try:
             op_fold = join(fold, 'OP/Bragg_S')
-            for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [1, 2]):
+            for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
                 if args.real == '':
                     args.real, _, _, _ = get_corr_files(op_fold)
-                data_path = join(op_fold, args.real)
-                data = np.loadtxt(data_path)
-                S_values = [d[2] for d in data]
-                kx = [d[0] for d in data]
-                ky = [d[1] for d in data]
-
-                # font
-                size = 15
-                params = {'legend.fontsize': 'large',
-                          'figure.figsize': (20, 8),
-                          'axes.labelsize': size,
-                          'axes.titlesize': size,
-                          'xtick.labelsize': size * 0.75,
-                          'ytick.labelsize': size * 0.75,
-                          'axes.titlepad': 25}
-                plt.rcParams.update(params)
-
+                kx, ky, S_values = np.loadtxt(join(op_fold, args.real), unpack=True, usecols=(0, 1, 2))
                 # graphs
-                ax = fig.add_subplot(2, 1, sub, projection='3d')
+                ax = axs[sub]
                 ax.scatter(kx, ky, S_values, '.')
                 ax.set_xlabel('$k_x$')
                 ax.set_ylabel('$k_y$')
@@ -51,6 +47,7 @@ def main():
         except Exception as err:
             print("\n\nException for " + fold)
             print(err)
+    plt.subplot(211)
     plt.legend(args.folders)
     # show
     plt.show()
