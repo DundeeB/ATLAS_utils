@@ -31,12 +31,13 @@ def main():
               'axes.titlepad': 25}
     plt.rcParams.update(params)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
-    axs[0].title(args.folder)
     op_fold = join(args.folder, 'OP/Bragg_S')
     for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
         if args.real == '':
             args.real, _, _, _ = get_corr_files(op_fold)
         kx, ky, S_values = np.loadtxt(join(op_fold, args.real), unpack=True, usecols=(0, 1, 2))
+        if sub == 0:
+            plt.legend(args.folder)
         # graphs
         ax = axs[sub]
         ax.scatter(kx, ky, S_values, '.')
