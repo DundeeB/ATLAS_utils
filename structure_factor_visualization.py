@@ -37,7 +37,7 @@ def main():
             phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
             phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
             args.real = str(np.max(phi_reals))
-        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real), unpack=True, usecols=(0, 1, 2))
+        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real+".txt"), unpack=True, usecols=(0, 1, 2))
         if sub == 0:
             plt.legend(args.folder)
         # graphs
