@@ -30,6 +30,7 @@ def main():
               'ytick.labelsize': size * 0.75,
               'axes.titlepad': 25}
     plt.rcParams.update(params)
+    plt.title(args.folder)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
     op_fold = join(args.folder, 'OP/Bragg_S')
     for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
@@ -42,8 +43,6 @@ def main():
         ax.set_xlabel('$k_x$')
         ax.set_ylabel('$k_y$')
         ax.set_zlabel(lbl)
-    plt.legend()
-    plt.title(args.folder)
     plt.show()
 
 
