@@ -12,7 +12,7 @@ from mpl_toolkits import mplot3d
 def main():
     # parse
     parser = argparse.ArgumentParser(description='plot options')
-    parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
+    parser.add_argument('-f', '--folder', type=str, nargs='?', help='folders to plot simulation result from')
     parser.add_argument('-r', '--real', type=str, nargs='?', default='',
                         help='Realization to plot. Default is last realization')
 
@@ -31,25 +31,19 @@ def main():
               'axes.titlepad': 25}
     plt.rcParams.update(params)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
-    for fold in args.folders:
-        try:
-            op_fold = join(fold, 'OP/Bragg_S')
-            for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
-                if args.real == '':
-                    args.real, _, _, _ = get_corr_files(op_fold)
-                kx, ky, S_values = np.loadtxt(join(op_fold, args.real), unpack=True, usecols=(0, 1, 2))
-                # graphs
-                ax = axs[sub]
-                ax.scatter(kx, ky, S_values, '.')
-                ax.set_xlabel('$k_x$')
-                ax.set_ylabel('$k_y$')
-                ax.set_zlabel(lbl)
-        except Exception as err:
-            print("\n\nException for " + fold)
-            print(err)
-    plt.subplot(211)
-    plt.legend(args.folders)
-    # show
+    op_fold = join(args.folder, 'OP/Bragg_S')
+    for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
+        if args.real == '':
+            args.real, _, _, _ = get_corr_files(op_fold)
+        kx, ky, S_values = np.loadtxt(join(op_fold, args.real), unpack=True, usecols=(0, 1, 2))
+        # graphs
+        ax = axs[sub]
+        ax.scatter(kx, ky, S_values, '.')
+        ax.set_xlabel('$k_x$')
+        ax.set_ylabel('$k_y$')
+        ax.set_zlabel(lbl)
+    plt.legend()
+    plt.title(args.folder)
     plt.show()
 
 
