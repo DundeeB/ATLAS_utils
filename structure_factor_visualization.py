@@ -13,7 +13,7 @@ def main():
     # parse
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
-    parser.add_argument('-r', '--real', type=str, nargs='?', default='',
+    parser.add_argument('-r', '--reals', type=str, nargs='?', default=None,
                         help='Realization to plot. Default is last realization')
 
     # handle defaults and load data
@@ -31,10 +31,12 @@ def main():
               'axes.titlepad': 25}
     plt.rcParams.update(params)
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
-    for fold in args.folders:
+    if args.reals is None:
+        args.reals = [None for _ in args.folders]
+    for fold, real in zip([args.folders, args.reals]):
         op_fold = join(fold, 'OP/Bragg_S')
         for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S$', '$S_m$'], [0, 1]):
-            if args.real == '':
+            if real is None:
                 phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
                 phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
                 args.real = str(np.max(phi_reals))
