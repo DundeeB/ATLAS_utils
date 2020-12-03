@@ -31,6 +31,7 @@ def main():
     parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
     parser.add_argument('-l', '--labels', type=str, nargs='*', help='legends of plot')
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='style of lines')
+
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
@@ -38,6 +39,9 @@ def main():
                         help='plot Bragg correlation e^ikr at k peak')
     parser.add_argument('-bsm', '--bragg_sm', type=bool, nargs='?', const=True, default=False,
                         help='plot magnetic Bragg correlation z*e^ikr at k peak of magentic')
+    parser.add_argument('-pos', '--pos', type=bool, nargs='?', const=True, default=False,
+                        help='plot positional g(r) at an angle theta calculate from the maximal psi')
+
     parser.add_argument('-nbl', '--only_upper', type=bool, nargs='?', const=True, default=False, help='')
     parser.add_argument('-a', '--all', type=bool, nargs='?', const=True, default=False,
                         help='plot all files in OP files (In comparison with just the last configuration)')
@@ -62,6 +66,8 @@ def main():
         op_dirs.append('Bragg_S')
     if args.bragg_sm:
         op_dirs.append('Bragg_Sm')
+    if args.pos:
+        op_dirs.append('pos')
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
