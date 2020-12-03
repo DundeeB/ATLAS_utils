@@ -34,8 +34,10 @@ def main():
     op_fold = join(args.folder, 'OP/Bragg_S')
     for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S_m$', '$S$'], [0, 1]):
         if args.real == '':
-            args.real, _, _, _ = get_corr_files(op_fold)
-        kx, ky, S_values = np.loadtxt(join(op_fold, args.real), unpack=True, usecols=(0, 1, 2))
+            phi_files = [corr_file for corr_file in os.listdir(op_fold) if re.match('vec.*', corr_file)]
+            phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
+            args.real = str(np.argmax(phi_reals))
+        kx, ky, S_values = np.loadtxt(join(op_fold, "vec_" + args.real), unpack=True, usecols=(0, 1, 2))
         if sub == 0:
             plt.legend(args.folder)
         # graphs
