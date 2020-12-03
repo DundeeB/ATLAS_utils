@@ -33,7 +33,7 @@ def main():
     axs = [fig.add_subplot(2, 1, 1, projection='3d'), fig.add_subplot(2, 1, 2, projection='3d')]
     if args.reals is None:
         args.reals = [None for _ in args.folders]
-    for fold, real in zip([args.folders, args.reals]):
+    for fold, real in zip(args.folders, args.reals):
         op_fold = join(fold, 'OP/Bragg_S')
         for op_fold, lbl, sub in zip([op_fold, op_fold + 'm'], ['$S$', '$S_m$'], [0, 1]):
             if real is None:
