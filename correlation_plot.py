@@ -33,6 +33,8 @@ def main():
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='style of lines')
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
+    parser.add_argument('-mnr', '--mn_reals', type=str, nargs='?', default=None,
+                        help='convergence for all realizations of the psi_mn given')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
     parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
@@ -97,17 +99,18 @@ def main():
                         if args.abs:
                             y = np.abs(y)
                         if op_dir == "pos":
-                            y = y - 1 if not args.abs else np.abs(y - 1)
+                            y = y - 1
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
-                    plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
+                    I = np.where(y > 0)
+                    plt.loglog(x[I], y[I], s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
             except Exception as err:
                 print(err)
     plt.grid()
     plt.legend()
     plt.xlabel('$\Delta$r [$\sigma$=2]')
-    plt.ylabel('Orientational correlation')
+    plt.ylabel('Correlation $<\\psi\\psi^*>$')
     plt.show()
 
 
