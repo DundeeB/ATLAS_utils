@@ -103,8 +103,9 @@ def main():
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
-                    I = np.where(y > 0)
-                    plt.loglog(x[I], y[I], s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
+                    I = np.where(y < 0)
+                    y[I] = np.nan
+                    plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
             except Exception as err:
                 print(err)
     plt.grid()
