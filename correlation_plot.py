@@ -119,7 +119,7 @@ def main():
                         y_p = np.array([y_ for x_, y_ in zip(x, y) if cond(x_, y_)])
                         x_p = np.array([x_ for x_, y_ in zip(x, y) if cond(x_, y_)])
                         p = np.polyfit(np.log(x_p), np.log(y_p), 1)
-                        slopes.append(p[0])
+                        slopes.append(-p[0])
             except Exception as err:
                 print(err)
     if args.pol:
