@@ -82,18 +82,17 @@ def main():
     for f, s, lbl in zip(args.folders, args.style, args.labels):
         for op_dir in op_dirs:
             try:
-                phi_files, phi_reals = get_corr_files(f + '/OP/' + op_dir + '/')
+                phi_files, _ = get_corr_files(f + '/OP/' + op_dir + '/')
                 corr_path = lambda corr_file: f + '/OP/' + op_dir + '/' + corr_file
                 x, y, counts = np.loadtxt(corr_path(phi_files[0]), usecols=(0, 1, 2), unpack=True)
                 y_sum = y * counts
                 counts_sum = counts
                 for i in range(args.reals):
-                    corr_file, real = phi_reals[i], phi_reals[i]
                     lbl_ = lbl + ', ' + op_dir
-                    x, y, counts = np.loadtxt(corr_path(corr_file), usecols=(0, 1, 2), unpack=True)
+                    x, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
                     y_sum += y * counts
                     counts_sum += counts
-                y = y_sum/counts_sum
+                y = y_sum / counts_sum
                 if args.abs:
                     y = np.abs(y)
                 if op_dir == "pos":
