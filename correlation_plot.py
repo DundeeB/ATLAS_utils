@@ -115,7 +115,7 @@ def main():
                     if args.pol:
                         # maxys.append(np.nanmax(y))
                         # maxxs.append(x[np.nanargmax(y)])
-                        I = np.logical_and(np.where(x > 1), np.where(x < 2))
+                        I = np.where(np.logical_and(x > 1, x < 2))
                         maxys.append(np.nanmean(y[I]))
                         maxxs.append(1.5)
                         cond = lambda x, y: x > 10 and x < 20 and (not np.isnan(y))
