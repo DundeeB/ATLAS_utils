@@ -33,7 +33,7 @@ def main():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-f', '--folders', type=str, nargs='+', help='folders to plot simulation result from')
     parser.add_argument('-l', '--labels', type=str, nargs='*', help='legends of plot')
-    parser.add_argument('-s', '--style', type=str, nargs='*', default=['.-'], help='style of lines')
+    parser.add_argument('-s', '--style', type=str, nargs='*', default=['-'], help='style of lines')
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
     parser.add_argument('-mnr', '--mn_reals', type=str, nargs='?', default=None,
