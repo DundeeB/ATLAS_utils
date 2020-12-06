@@ -114,7 +114,7 @@ def main():
                     plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
                     if args.pol:
                         maxys.append(np.nanmax(y))
-                        maxxs.append(x[np.argmax(y)])
+                        maxxs.append(x[np.nanargmax(y)])
                         I = np.where(np.logical_not(np.isnan(y)))
                         p = np.polyfit(x[I], np.log(y[I]), 1)
                         slopes.append(p[0])
