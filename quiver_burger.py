@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     burg_fold = join(args.folder, 'OP/burger_vectors')
     if args.real == '':
-        args.real, _, _, _ = get_corr_files(burg_fold)
+        _, args.real = get_corr_files(burg_fold)
     real_num = int(re.split('(vec_|\.txt)', args.real)[2])
     real_fold = join(burg_fold, args.real)
     burg = np.loadtxt(real_fold)

@@ -5,7 +5,6 @@ import argparse
 from os.path import join
 import os
 import re
-from correlation_plot import get_corr_files
 from mpl_toolkits import mplot3d
 
 

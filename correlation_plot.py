@@ -12,8 +12,9 @@ import re
 def get_corr_files(OP_sub_dir):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if re.match('corr.*', corr_file)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
-    i_m = np.argmax(phi_reals)
-    return phi_files[i_m], phi_reals[i_m], phi_files, phi_reals
+    sorted_phi_files = [f for _, f in sorted(zip(phi_reals, phi_files), reverse=True)]
+    sorted_phi_reals = sorted(phi_reals, reverse=True)
+    return sorted_phi_files, sorted_phi_reals
 
 
 def prepare_lbl(lbl):
@@ -36,8 +37,6 @@ def main():
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['-'], help='style of lines')
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
-    parser.add_argument('-mnr', '--mn_reals', type=str, nargs='?', default=None,
-                        help='convergence for all realizations of the psi_mn given')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
     parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
@@ -48,8 +47,7 @@ def main():
                         help='plot positional g(r) at an angle theta calculate from the maximal psi')
 
     parser.add_argument('-nbl', '--only_upper', type=bool, nargs='?', const=True, default=False, help='')
-    parser.add_argument('-a', '--all', type=bool, nargs='?', const=True, default=False,
-                        help='plot all files in OP files (In comparison with just the last configuration)')
+    parser.add_argument('-r', '--reals', type=int, nargs='?', default=1, help='number of realization')
     parser.add_argument('-abs', '--abs', type=bool, nargs='?', const=True, default=False,
                         help='plot |corr|')
     parser.add_argument('-pol', '--pol', type=bool, nargs='?', const=True, default=False,
@@ -84,45 +82,43 @@ def main():
     maxys, maxxs, slopes = [], [], []
     for f, s, lbl in zip(args.folders, args.style, args.labels):
         for op_dir in op_dirs:
-            relevant_files = []
-            relevant_reals = []
             try:
-                last_file, last_real, phi_files, phi_reals = get_corr_files(f + '/OP/' + op_dir + '/')
-                if args.all:
-                    for corr_file, real in zip(phi_files, phi_reals):
-                        relevant_files.append(corr_file)
-                        relevant_reals.append(real)
-                else:
-                    relevant_files.append(last_file)
-                    relevant_reals.append(last_real)
-                for corr_file, real in zip(relevant_files, relevant_reals):
+                phi_files, phi_reals = get_corr_files(f + '/OP/' + op_dir + '/')
+                corr_path = lambda corr_file: f + '/OP/' + op_dir + '/' + corr_file
+                x, y, counts = np.loadtxt(corr_path(phi_files[0]), usecols=(0, 1, 2), unpack=True)
+                y_sum = y * counts
+                counts_sum = counts
+                for i in range(args.reals):
+                    corr_file, real = phi_reals[i], phi_reals[i]
                     lbl_ = lbl + ', ' + op_dir
                     if args.all:
                         lbl_ = lbl_ + ', real ' + str(real)
-                    corr_path = f + '/OP/' + op_dir + '/' + corr_file
                     try:
-                        x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True)
-                        if args.abs:
-                            y = np.abs(y)
-                        if op_dir == "pos":
-                            y = y - 1
+                        x, y, counts = np.loadtxt(corr_path(corr_file), usecols=(0, 1, 2), unpack=True)
+                        y_sum += y * counts
+                        counts_sum += counts
                     except ValueError:
                         x, y = np.loadtxt(corr_path, usecols=(0, 1), unpack=True, dtype=complex)
                         x, y = np.abs(x), np.abs(y)
-                    I = np.where(y < 0)
-                    y[I] = np.nan
-                    plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
-                    if args.pol:
-                        # maxys.append(np.nanmax(y))
-                        # maxxs.append(x[np.nanargmax(y)])
-                        I = np.where(np.logical_and(x > 1, x < 2))
-                        maxys.append(np.nanmean(y[I]))
-                        maxxs.append(1.5)
-                        cond = lambda x, y: x > 10 and x < 20 and (not np.isnan(y))
-                        y_p = np.array([y_ for x_, y_ in zip(x, y) if cond(x_, y_)])
-                        x_p = np.array([x_ for x_, y_ in zip(x, y) if cond(x_, y_)])
-                        p = np.polyfit(np.log(x_p), np.log(y_p), 1)
-                        slopes.append(-p[0])
+                y = y_sum/counts_sum
+                if args.abs:
+                    y = np.abs(y)
+                if op_dir == "pos":
+                    y = y - 1
+                I = np.where(y < 0)
+                y[I] = np.nan
+                plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
+                if args.pol:
+                    # maxys.append(np.nanmax(y))
+                    # maxxs.append(x[np.nanargmax(y)])
+                    I = np.where(np.logical_and(x > 1, x < 2))
+                    maxys.append(np.nanmean(y[I]))
+                    maxxs.append(1.5)
+                    cond = lambda x, y: x > 10 and x < 20 and (not np.isnan(y))
+                    y_p = np.array([y_ for x_, y_ in zip(x, y) if cond(x_, y_)])
+                    x_p = np.array([x_ for x_, y_ in zip(x, y) if cond(x_, y_)])
+                    p = np.polyfit(np.log(x_p), np.log(y_p), 1)
+                    slopes.append(-p[0])
             except Exception as err:
                 print(err)
     if args.pol:
