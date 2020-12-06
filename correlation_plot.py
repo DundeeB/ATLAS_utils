@@ -7,7 +7,6 @@ import re
 
 
 # TODO plot realization averged correlation based on all existing data
-# TODO add again the polynomial slope calculation
 
 def get_corr_files(OP_sub_dir):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if re.match('corr.*', corr_file)]
@@ -91,8 +90,6 @@ def main():
                 for i in range(args.reals):
                     corr_file, real = phi_reals[i], phi_reals[i]
                     lbl_ = lbl + ', ' + op_dir
-                    if args.all:
-                        lbl_ = lbl_ + ', real ' + str(real)
                     try:
                         x, y, counts = np.loadtxt(corr_path(corr_file), usecols=(0, 1, 2), unpack=True)
                         y_sum += y * counts
