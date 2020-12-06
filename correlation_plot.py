@@ -6,6 +6,9 @@ import os
 import re
 
 
+# TODO plot realization averged correlation based on all existing data
+# TODO add again the polynomial slope calculation
+
 def get_corr_files(OP_sub_dir):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if re.match('corr.*', corr_file)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
@@ -49,6 +52,8 @@ def main():
                         help='plot all files in OP files (In comparison with just the last configuration)')
     parser.add_argument('-abs', '--abs', type=bool, nargs='?', const=True, default=False,
                         help='plot |corr|')
+    parser.add_argument('-pol', '--pol', type=bool, nargs='?', const=True, default=False,
+                        help='Show polynomial slope -1/4 for orientational -1/3 for positional')
 
     args = parser.parse_args()
     if len(args.style) == 1:
@@ -76,6 +81,7 @@ def main():
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
     plt.figure()
+    maxys, maxxs, slopes = [], [], []
     for f, s, lbl in zip(args.folders, args.style, args.labels):
         for op_dir in op_dirs:
             relevant_files = []
@@ -106,12 +112,40 @@ def main():
                     I = np.where(y < 0)
                     y[I] = np.nan
                     plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
+                    if args.pol:
+                        maxys.append(np.nanmax(y))
+                        maxxs.append(x[np.argmax(y)])
+                        I = np.where(np.logical_not(np.isnan(y)))
+                        p = np.polyfit(x[I], np.log(y[I]), 1)
+                        slopes.append(p[0])
             except Exception as err:
                 print(err)
+    if args.pol:
+        I = np.argsort(slopes)
+        maxys = np.array(maxys)[I]
+        maxxs = np.array(maxxs)[I]
+        slopes = np.array(slopes)[I]
+        for slope, plot_corr_type in zip([1.0 / 3.0, 1.0 / 4.0], [args.pos, args.mn is not None]):
+            if not plot_corr_type:
+                continue
+            if min(slopes) > slope:
+                y_init = min(maxys)
+                x_init = maxxs[np.argmin(maxys)]
+            else:
+                if max(slopes) < slope:
+                    y_init = max(maxys)
+                    x_init = maxxs[np.argmax(maxys)]
+                else:
+                    i = np.where(slopes > slope)[0][0]
+                    y_init = maxys[i - 1]
+                    x_init = maxxs[i - 1]
+            y = y_init * np.power(x / x_init, -slope)
+            plt.loglog(x, y, label='polynomial fit with slope ' + str(slope), '--', linewidth=2)
+
     plt.grid()
     plt.legend()
     plt.xlabel('$\Delta$r [$\sigma$=2]')
-    plt.ylabel('Correlation $<\\psi\\psi^*>$')
+    plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
     plt.show()
 
 
