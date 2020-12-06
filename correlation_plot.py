@@ -130,7 +130,8 @@ def main():
         maxys = np.array(maxys)[I]
         maxxs = np.array(maxxs)[I]
         slopes = np.array(slopes)[I]
-        for slope, plot_corr_type in zip([1.0 / 3.0, 1.0 / 4.0], [args.pos, args.psis_mn is not None]):
+        for slope, plot_corr_type in zip([1.0 / 3.0, 1.0 / 4.0],
+                                         [args.pos or args.bragg_s or args.bragg_sm, args.psis_mn is not None]):
             if not plot_corr_type:
                 continue
             if min(slopes) > slope:
