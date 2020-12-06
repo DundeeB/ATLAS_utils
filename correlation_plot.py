@@ -113,8 +113,11 @@ def main():
                     y[I] = np.nan
                     plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
                     if args.pol:
-                        maxys.append(np.nanmax(y))
-                        maxxs.append(x[np.nanargmax(y)])
+                        # maxys.append(np.nanmax(y))
+                        # maxxs.append(x[np.nanargmax(y)])
+                        I = np.logical_and(np.where(x > 1), np.where(x < 2))
+                        maxys.append(np.nanmean(y[I]))
+                        maxxs.append(1.5)
                         cond = lambda x, y: x > 10 and x < 20 and (not np.isnan(y))
                         y_p = np.array([y_ for x_, y_ in zip(x, y) if cond(x_, y_)])
                         x_p = np.array([x_ for x_, y_ in zip(x, y) if cond(x_, y_)])
