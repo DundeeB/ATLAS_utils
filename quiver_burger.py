@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     burg_fold = join(args.folder, 'OP/burger_vectors')
     if args.real == '':
-        sorted_phi_files, sorted_phi_reals = get_corr_files(burg_fold)
+        sorted_phi_files, sorted_phi_reals = get_corr_files(burg_fold, prefix='vec_')
         args.real = sorted_phi_files[0]
     real_num = int(re.split('(vec_|\.txt)', args.real)[2])
     real_fold = join(burg_fold, args.real)
