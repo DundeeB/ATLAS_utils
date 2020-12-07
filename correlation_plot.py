@@ -88,7 +88,7 @@ def main():
                 y_sum = y * counts
                 counts_sum = counts
                 lbl_ = lbl + ', ' + op_dir
-                reals = min(args.reals, )  # TODO: continue from here
+                # reals = min(args.reals, )  # TODO: continue from here
                 for i in range(1, args.reals):
                     _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
                     y_sum += y * counts
