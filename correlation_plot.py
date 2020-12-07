@@ -94,7 +94,7 @@ def main():
                     y[np.where(np.isnan(y))] = 0
                     y_sum += y * counts
                     counts_sum += counts
-                if args.reals > 1:
+                if reals > 1:
                     lbl_ += ' mean of ' + str(reals) + ' realizations'
                 y = y_sum / counts_sum
                 if args.abs:
