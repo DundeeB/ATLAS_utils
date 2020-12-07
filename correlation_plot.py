@@ -9,7 +9,7 @@ import re
 # TODO plot realization averged correlation based on all existing data
 
 def get_corr_files(OP_sub_dir):
-    phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if re.match('corr.*', corr_file)]
+    phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith('correlation_')]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
     sorted_phi_files = [f for _, f in sorted(zip(phi_reals, phi_files), reverse=True)]
     sorted_phi_reals = sorted(phi_reals, reverse=True)
@@ -88,8 +88,9 @@ def main():
                 y_sum = y * counts
                 counts_sum = counts
                 lbl_ = lbl + ', ' + op_dir
-                for i in range(args.reals):
-                    x, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
+                reals = min(args.reals, ) # TODO: continue from here
+                for i in range(1, args.reals):
+                    _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
                     y_sum += y * counts
                     counts_sum += counts
                 if args.reals > 1:
