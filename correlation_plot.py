@@ -91,6 +91,7 @@ def main():
                 reals = min(args.reals, len(phi_files) - 1)  # TODO: continue from here
                 for i in range(1, reals):
                     _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
+                    y[np.where(np.isnan(y))] = 0
                     y_sum += y * counts
                     counts_sum += counts
                 if args.reals > 1:
