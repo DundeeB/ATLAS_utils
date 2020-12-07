@@ -101,8 +101,7 @@ def main():
                     y = np.abs(y)
                 if op_dir == "pos":
                     y = y - 1
-                I = np.where(y < 0)
-                y[I] = np.nan
+                y[np.where(y <= 0)] = np.nan
                 plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
                 if args.pol:
                     # maxys.append(np.nanmax(y))
