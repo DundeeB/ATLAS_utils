@@ -88,13 +88,13 @@ def main():
                 y_sum = y * counts
                 counts_sum = counts
                 lbl_ = lbl + ', ' + op_dir
-                # reals = min(args.reals, )  # TODO: continue from here
-                for i in range(1, args.reals):
+                reals = min(args.reals, len(phi_files) - 1)  # TODO: continue from here
+                for i in range(1, reals):
                     _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
                     y_sum += y * counts
                     counts_sum += counts
                 if args.reals > 1:
-                    lbl_ += ' mean of ' + str(args.reals) + ' realizations'
+                    lbl_ += ' mean of ' + str(reals) + ' realizations'
                 y = y_sum / counts_sum
                 if args.abs:
                     y = np.abs(y)
