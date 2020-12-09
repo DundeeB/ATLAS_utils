@@ -10,6 +10,7 @@ parser.add_argument('-y', '--y_column', type=int, nargs='*', default=[2], help='
 parser.add_argument('-xL', '--x_label', type=str, nargs='?', default='x', help='x label')
 parser.add_argument('-yL', '--y_label', type=str, nargs='?', default='y', help='y label')
 parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
+parser.add_argument('-L', '--leg_loc', type=int, nargs='?', help='legends location, 0 turn of legend')
 parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
 parser.add_argument('-neq', '--not_equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
 parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False, help='axis equal')
@@ -49,7 +50,8 @@ for f in args.files:
                 plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
         i += 1
 plt.grid()
-plt.legend()
+if args.leg_loc > 0:
+    plt.legend(loc=args.leg_loc)
 plt.xlabel(args.x_label)
 plt.ylabel(args.y_label)
 size = 15
