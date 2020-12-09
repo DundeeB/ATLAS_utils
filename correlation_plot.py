@@ -11,7 +11,7 @@ import re
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
-    sorted_phi_files = [f for _, f in sorted(zip(phi_reals, phi_files), reverse=True)]
+    sorted_phi_files = [f for _, f in sorted(zip(phi_reals, phi_files), reverse=reverse)]
     sorted_phi_reals = sorted(phi_reals, reverse=reverse)
     return sorted_phi_files, sorted_phi_reals
 
