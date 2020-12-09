@@ -10,7 +10,7 @@ parser.add_argument('-y', '--y_column', type=int, nargs='*', default=[2], help='
 parser.add_argument('-xL', '--x_label', type=str, nargs='?', default='x', help='x label')
 parser.add_argument('-yL', '--y_label', type=str, nargs='?', default='y', help='y label')
 parser.add_argument('-l', '--legends', type=str, nargs='*', help='legends of plot')
-parser.add_argument('-L', '--leg_loc', type=int, nargs='?', help='legends location, 0 turn of legend')
+parser.add_argument('-L', '--leg_loc', type=int, nargs='?', help='legends location, 0 turn of legend', default=1)
 parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
 parser.add_argument('-neq', '--not_equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
 parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False, help='axis equal')
