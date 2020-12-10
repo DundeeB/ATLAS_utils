@@ -53,6 +53,8 @@ def main():
                         help='Show polynomial slope -1/4 for orientational -1/3 for positional')
     parser.add_argument('-reverse', '--reverse', type=bool, nargs='?', const=False, default=True,
                         help='Sum realizations backwards')
+    parser.add_argument('-max', '--max', type=bool, nargs='?', const=False, default=True,
+                        help='Plot polynomial fit with max instead of mean')
 
     args = parser.parse_args()
     if len(args.style) == 1:
@@ -106,11 +108,13 @@ def main():
                 y[np.where(y <= 0)] = np.nan
                 plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
                 if args.pol:
-                    # maxys.append(np.nanmax(y))
-                    # maxxs.append(x[np.nanargmax(y)])
-                    I = np.where(np.logical_and(x > 1, x < 3))
-                    maxys.append(np.nanmean(y[I]))
-                    maxxs.append(1.5)
+                    if args.max:
+                        maxys.append(np.nanmax(y))
+                        maxxs.append(x[np.nanargmax(y)])
+                    else:
+                        I = np.where(np.logical_and(x > 1, x < 3))
+                        maxys.append(np.nanmean(y[I]))
+                        maxxs.append(2)
                     cond = lambda x, y: x > 10 and x < 20 and (not np.isnan(y))
                     y_p = np.array([y_ for x_, y_ in zip(x, y) if cond(x_, y_)])
                     x_p = np.array([x_ for x_, y_ in zip(x, y) if cond(x_, y_)])
