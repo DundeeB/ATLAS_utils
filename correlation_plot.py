@@ -53,7 +53,7 @@ def main():
                         help='Show polynomial slope -1/4 for orientational -1/3 for positional')
     parser.add_argument('-reverse', '--reverse', type=bool, nargs='?', const=False, default=True,
                         help='Sum realizations backwards')
-    parser.add_argument('-max', '--max', type=bool, nargs='?', const=False, default=True,
+    parser.add_argument('-max', '--max', type=bool, nargs='?', const=True, default=False,
                         help='Plot polynomial fit with max instead of mean')
 
     args = parser.parse_args()
@@ -100,7 +100,7 @@ def main():
                         y_sum += y * counts if op_dirs != 'pos' else y
                         counts_sum += counts
                     lbl_ += ' mean of ' + str(reals) + ' realizations'
-                    y = y_sum / counts_sum if op_dirs != 'pos' else y_sum/reals
+                    y = y_sum / counts_sum if op_dirs != 'pos' else y_sum / reals
                 if args.abs:
                     y = np.abs(y)
                 if op_dir == "pos":
