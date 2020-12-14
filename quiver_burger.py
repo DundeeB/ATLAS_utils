@@ -34,8 +34,7 @@ def main():
     if args.burger_files is None:
         burg_fold = join(args.folder, 'OP/burger_vectors')
         sorted_phi_files, sorted_phi_reals = get_corr_files(burg_fold, prefix='vec_')
-        reals = [sorted_phi_files[0]]
-        args.burger_files = [join(burg_fold, args.real)]
+        args.burger_files = [join(burg_fold, sorted_phi_files[0])]
 
     burgs = [np.loadtxt(burg_file) for burg_file in args.burger_files]
     reals_num = [int(re.split('(.*vec_|\.txt)', burg_file)[2]) for burg_file in args.burger_files]
