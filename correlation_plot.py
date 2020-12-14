@@ -90,9 +90,9 @@ def main():
                 phi_files, _ = get_corr_files(f + '/OP/' + op_dir + '/', reverse=args.reverse)
                 corr_path = lambda corr_file: f + '/OP/' + op_dir + '/' + corr_file
                 x, y, counts = np.loadtxt(corr_path(phi_files[0]), usecols=(0, 1, 2), unpack=True)
-                if args.reals > 1:
+                reals = min(args.reals, len(phi_files) - 1)
+                if reals > 1:
                     counts_sum = counts
-                    reals = min(args.reals, len(phi_files) - 1)
                     y_sum = y * counts if op_dirs != 'pos' else y
                     for i in range(1, reals):
                         _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
