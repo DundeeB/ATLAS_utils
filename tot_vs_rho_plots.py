@@ -54,7 +54,7 @@ def labels(args, ic, op):
     label = 'Initial conditions = ' + ic
     if len(args.order_parameter) > 1:
         label += ', ' + op
-    return args.xlabel, args.ylabel, op
+    return args.xlabel, args.ylabel, label
 
 
 def params_from_name(name):
