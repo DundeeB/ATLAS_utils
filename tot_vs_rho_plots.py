@@ -43,15 +43,18 @@ def choose_folders(args):
     return folders, x, ics
 
 
-def calc_tot(folder, args):
-    op_dir = os.path.join(father_dir, folder, 'OP', args.order_parameter)
+def calc_tot(folder, op):
+    op_dir = os.path.join(father_dir, folder, 'OP', op)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     return np.abs(np.mean(psi))
 
 
-def labels(args, ic):
-    return args.xlabel, args.ylabel, 'Initial conditions = ' + ic
+def labels(args, ic, op):
+    label = 'Initial conditions = ' + ic
+    if len(args.order_parameter) > 1:
+        label += ', ' + op
+    return args.xlabel, args.ylabel, op
 
 
 def params_from_name(name):
@@ -74,12 +77,13 @@ def main():
     args = parse()
     folders, x, ics = choose_folders(args)
     for i, ic in enumerate(args.ic):
-        y = [calc_tot(folder, args) for folder in folders if params_from_name(folder)[-1] == ic]
-        x_ic = [x_ for j, x_ in enumerate(x) if params_from_name(folders[j])[-1] == ic]
-        xlabel, ylabel, label = labels(args, ic)
-        I = np.argsort(x_ic)
-        x_ic, y = np.array(x_ic)[I], np.array(y)[I]
-        plt.plot(x_ic, y, '.-', label=label)
+        for op in args.order_parameter:
+            y = [calc_tot(folder, op) for folder in folders if params_from_name(folder)[-1] == ic]
+            x_ic = [x_ for j, x_ in enumerate(x) if params_from_name(folders[j])[-1] == ic]
+            xlabel, ylabel, label = labels(args, ic, op)
+            I = np.argsort(x_ic)
+            x_ic, y = np.array(x_ic)[I], np.array(y)[I]
+            plt.plot(x_ic, y, '.-', label=label)
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
