@@ -76,6 +76,7 @@ def params_from_name(name):
 def main():
     args = parse()
     folders, x, ics = choose_folders(args)
+    plt.figure()
     for i, ic in enumerate(args.ic):
         for op in args.order_parameter:
             y = [calc_tot(folder, op) for folder in folders if params_from_name(folder)[-1] == ic]
@@ -84,12 +85,10 @@ def main():
             I = np.argsort(x_ic)
             x_ic, y = np.array(x_ic)[I], np.array(y)[I]
             plt.plot(x_ic, y, '.-', label=label)
-
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
-    plt.figure()
     plt.grid()
     plt.legend()
     plt.xlabel(xlabel)
