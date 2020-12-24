@@ -12,12 +12,12 @@ father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='?', help='N values to plot')
-    parser.add_argument('-h', '--h', type=str, nargs='?', help='h values to plot')
+    parser.add_argument('-he', '--height', type=str, nargs='?', help='h values to plot')
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-op', '--order_parameter', type=str, nargs='?', help='order parameter to calc sum')
     args = parser.parse_args()
     args.N = int(args.N)
-    args.h = float(args.h)
+    args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
 
 
@@ -27,7 +27,7 @@ def choose_folders(args):
     args.rho = np.sort(args.rho)
     for folder in os.listdir(father_dir):
         N, h, rhoH, ic = params_from_name(folder)
-        if (N == args.N) and (h == args.h) and (rhoH >= args.rho[0]) and (rhoH <= args.rho[1]):
+        if (N == args.N) and (h == args.height) and (rhoH >= args.rho[0]) and (rhoH <= args.rho[1]):
             folders.append(folder)
             x.append(rhoH)
     return folders, x
