@@ -12,12 +12,12 @@ father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='+', help='N values to plot')
+    parser.add_argument('-op', '--order_parameter', type=str, nargs='+', help='order parameter to calc sum')
+    parser.add_argument('-ic', '--ic', type=str, nargs='+', default=['square', 'honeycomb'])
     parser.add_argument('-he', '--height', type=str, nargs='?', help='h values to plot')
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
-    parser.add_argument('-op', '--order_parameter', type=str, nargs='+', help='order parameter to calc sum')
-    parser.add_argument('-ic', '--ic', type=str, nargs='+', default=['square', 'honeycomb'])
     args = parser.parse_args()
     args.N = [int(float(N)) for N in args.N]
     args.height = float(args.height)
@@ -48,7 +48,7 @@ def calc_tot(folder, op):
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     if op.startswith('Bragg_S'):
-        kx, ky, S_values = psi[0, :], psi[1, :], psi[2, :]
+        kx, ky, S_values = psi[:, 0], psi[:, 1], psi[:, 1]
         m = np.argmax(S_values)
         k = [kx[m], ky[m]]
         real = get_corr_files(op_dir, 'vec_')[1][0]
