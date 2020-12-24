@@ -48,7 +48,7 @@ def calc_tot(folder, op):
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     if op.startswith('Bragg_S'):
-        kx, ky, S_values = psi[:, 0], psi[:, 1], psi[:, 1]
+        kx, ky, S_values = psi[:, 0], psi[:, 1], psi[:, 2]
         m = np.argmax(S_values)
         k = [kx[m], ky[m]]
         real = get_corr_files(op_dir, 'vec_')[1][0]
