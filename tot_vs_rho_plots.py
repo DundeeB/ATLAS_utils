@@ -14,10 +14,10 @@ def parse():
     parser.add_argument('-N', '--N', type=str, nargs='?', help='N values to plot')
     parser.add_argument('-he', '--height', type=str, nargs='?', help='h values to plot')
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
-    parser.add_argument('-op', '--order_parameter', type=str, nargs='?', help='order parameter to calc sum')
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
-    parser.add_argument('-L', '--label', type=str, nargs='?', default='')
+    parser.add_argument('-op', '--order_parameter', type=str, nargs='+', help='order parameter to calc sum')
+    parser.add_argument('-ic', '--ic', type=str, nargs='+', default=['square', 'honeycomb'])
     args = parser.parse_args()
     args.N = int(float(args.N))
     args.height = float(args.height)
@@ -28,16 +28,17 @@ def parse():
 
 
 def choose_folders(args):
-    folders, x = [], []
+    folders, x, ics = [], [], []
     args.rho = np.sort(args.rho)
     for folder in os.listdir(father_dir):
         if not (folder.startswith('N=') and os.path.isdir(folder)):
             continue
         N, h, rhoH, ic = params_from_name(folder)
-        if (N == args.N) and (h == args.height) and (rhoH >= args.rho[0]) and (rhoH <= args.rho[1]):
+        if (N == args.N) and (h == args.height) and (rhoH >= args.rho[0]) and (rhoH <= args.rho[1]) and (ic in args.ic):
             folders.append(folder)
             x.append(rhoH)
-    return folders, x
+            ics.append(ic)
+    return folders, x, ics
 
 
 def calc_tot(folder, args):
@@ -47,8 +48,8 @@ def calc_tot(folder, args):
     return np.abs(np.mean(psi))
 
 
-def labels(args):
-    return args.xlabel, args.ylabel, args.label
+def labels(args, ic):
+    return args.xlabel, args.ylabel, 'Initial conditions = ' + ic
 
 
 def params_from_name(name):
@@ -69,18 +70,20 @@ def params_from_name(name):
 
 def main():
     args = parse()
-    folders, x = choose_folders(args)
-    y = [calc_tot(folder, args) for folder in folders]
-    xlabel, ylabel, label = labels(args)
+    folders, x, ics = choose_folders(args)
+    for i, ic in enumerate(args.ic):
+        y = [calc_tot(folder, args) for folder in folders if params_from_name(folder)[-1] == ic]
+        x_ic = [x_ for j, x_ in enumerate(x) if params_from_name(folders[j])[-1] == ic]
+        xlabel, ylabel, label = labels(args, ic)
+        I = np.argsort(x_ic)
+        x_ic, y = np.array(x_ic)[I], np.array(y)[I]
+        plt.plot(x_ic, y, '.-', label=label)
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
     plt.figure()
-    I = np.argsort(x)
-    x, y = np.array(x)[I], np.array(y)[I]
-    plt.plot(x, y, '.-', label=label)
     plt.grid()
     plt.legend()
     plt.xlabel(xlabel)
