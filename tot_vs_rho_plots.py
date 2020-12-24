@@ -47,7 +47,21 @@ def calc_tot(folder, op):
     op_dir = os.path.join(father_dir, folder, 'OP', op)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
-    return np.abs(np.mean(psi))
+    if op.startswith('Bragg_S'):
+        kx, ky, S_values = psi[0, :], psi[1, :], psi[2, :]
+        m = np.argmax(S_values)
+        k = [kx[m], ky[m]]
+        real = get_corr_files(op_dir, 'vec_')[1][0]
+        sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
+        if op.endswith('_S'):
+            psi = np.array([np.exp(1j * (k[0] * r[0] + k[1] * r[1])) for r in sp])
+        if op.endswith('_Sm'):
+            _, h, _, _ = params_from_name(folder)
+            rad = 1.0
+            lz = (h + 1) * 2 * rad
+            psi = np.array(
+                [(r[2] - lz / 2) / (lz / 2 - rad) * np.exp(1j * (k[0] * r[0] + k[1] * r[1])) for r in sp])
+        return np.abs(np.mean(psi))
 
 
 def params_from_name(name):
