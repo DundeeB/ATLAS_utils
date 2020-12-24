@@ -16,7 +16,7 @@ def parse():
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-op', '--order_parameter', type=str, nargs='?', help='order parameter to calc sum')
     args = parser.parse_args()
-    args.N = int(args.N)
+    args.N = int(float(args.N))
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
     return args
