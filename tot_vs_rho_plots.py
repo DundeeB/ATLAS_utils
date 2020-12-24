@@ -39,7 +39,7 @@ def calc_tot(folder, args):
     op_dir = os.path.join(father_dir, folder, 'OP', args.order_parameter)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
-    return np.abs(np.sum(psi))
+    return np.abs(np.mean(psi))
 
 
 def labels(args):
@@ -73,7 +73,9 @@ def main():
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
     plt.figure()
-    plt.plot(x, y, label=label)
+    I = np.argsort(x)
+    x, y = x[I], y[I]
+    plt.plot(x, y, '.-', label=label)
     plt.grid()
     plt.legend()
     plt.xlabel(xlabel)
