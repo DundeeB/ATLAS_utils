@@ -5,9 +5,6 @@ import argparse
 import os
 import re
 
-
-# TODO plot realization averged correlation based on all existing data
-
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
