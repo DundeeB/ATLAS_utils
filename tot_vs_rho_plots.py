@@ -19,7 +19,7 @@ def parse():
     args.N = int(args.N)
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
-
+    print(args.rho)
 
 
 def choose_folders(args):
