@@ -12,7 +12,7 @@ father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=int, nargs='?', help='N values to plot')
-    parser.add_argument('-h', '--h', type=int, nargs='?', help='h values to plot')
+    parser.add_argument('-h', '--h', type=float, nargs='?', help='h values to plot')
     parser.add_argument('-rho', '--rho', type=tuple, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-op', '--order_parameter', type=str, nargs='?', help='order parameter to calc sum')
     return parser.parse_args()
