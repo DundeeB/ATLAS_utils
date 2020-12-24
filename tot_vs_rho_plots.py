@@ -78,7 +78,6 @@ def main():
               'xtick.labelsize': size * 0.75, 'ytick.labelsize': size * 0.75, 'axes.titlepad': 25}
     plt.rcParams.update(params)
     plt.grid()
-    plt.legend()
     plt.xlabel(args.xlabel)
     plt.ylabel(args.ylabel)
 
@@ -93,7 +92,7 @@ def main():
             I = np.argsort(x_ic)
             x_ic, y = np.array(x_ic)[I], np.array(y)[I]
             plt.plot(x_ic, y, '.-', label=label)
-
+    plt.legend()
     plt.show()
 
 
