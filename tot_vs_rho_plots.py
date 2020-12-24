@@ -26,6 +26,8 @@ def choose_folders(args):
     folders, x = [], []
     args.rho = np.sort(args.rho)
     for folder in os.listdir(father_dir):
+        if not (folder.startswith('N=') and os.path.isdir(folder)):
+            continue
         N, h, rhoH, ic = params_from_name(folder)
         if (N == args.N) and (h == args.height) and (rhoH >= args.rho[0]) and (rhoH <= args.rho[1]):
             folders.append(folder)
@@ -34,7 +36,7 @@ def choose_folders(args):
 
 
 def calc_tot(folder, args):
-    op_dir = os.path.join(father_dir, 'OP', args.order_parameter)
+    op_dir = os.path.join(father_dir, folder, 'OP', args.order_parameter)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     return np.abs(np.sum(psi))
