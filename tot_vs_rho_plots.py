@@ -19,11 +19,11 @@ def parse():
     args.N = int(args.N)
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
-    print(args.rho)
 
 
 def choose_folders(args):
     folders, x = [], []
+    print(args.rho)
     args.rho = np.sort(args.rho)
     for folder in os.listdir(father_dir):
         N, h, rhoH, ic = params_from_name(folder)
