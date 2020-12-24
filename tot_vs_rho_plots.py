@@ -84,7 +84,7 @@ def main():
             for N in args.N:
                 choose = lambda folder: (params_from_name(folder)[-1] == ic and params_from_name(folder)[0] == N)
                 y = [calc_tot(folder, op) for folder in folders if choose(folder)]
-                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[i])]
+                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j])]
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
                     label += ', ' + op
