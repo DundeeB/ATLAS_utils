@@ -22,8 +22,10 @@ def parse():
     args.N = int(float(args.N))
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
-    if args.ylabel == None:
-        args.ylabel = prepare_lbl(args.order_parameter)
+    if args.ylabel is None and len(args.order_parameter) == 1:
+        args.ylabel = prepare_lbl(args.order_parameter[0])
+    else:
+        args.ylabel = ''
     return args
 
 
