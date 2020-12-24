@@ -61,7 +61,7 @@ def calc_tot(folder, op):
             lz = (h + 1) * 2 * rad
             psi = np.array(
                 [(r[2] - lz / 2) / (lz / 2 - rad) * np.exp(1j * (k[0] * r[0] + k[1] * r[1])) for r in sp])
-        return np.abs(np.mean(psi))
+    return np.abs(np.mean(psi))
 
 
 def params_from_name(name):
