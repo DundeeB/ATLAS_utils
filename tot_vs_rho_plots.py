@@ -74,7 +74,7 @@ def main():
     plt.rcParams.update(params)
     plt.figure()
     I = np.argsort(x)
-    x, y = x[I], y[I]
+    x, y = np.array(x)[I], np.array(y)[I]
     plt.plot(x, y, '.-', label=label)
     plt.grid()
     plt.legend()
