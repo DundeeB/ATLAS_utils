@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import argparse
 import os
 import re
-from correlation_plot import get_corr_files
+from correlation_plot import get_corr_files, prepare_lbl
 
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
@@ -23,7 +23,7 @@ def parse():
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
     if args.ylabel == None:
-        args.ylabel = args.order_parameter
+        args.ylabel = prepare_lbl(args.order_parameter)
     return args
 
 
