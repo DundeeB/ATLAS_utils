@@ -15,10 +15,15 @@ def parse():
     parser.add_argument('-he', '--height', type=str, nargs='?', help='h values to plot')
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-op', '--order_parameter', type=str, nargs='?', help='order parameter to calc sum')
+    parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
+    parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
+    parser.add_argument('-L', '--label', type=str, nargs='?', default='')
     args = parser.parse_args()
     args.N = int(float(args.N))
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
+    if args.ylabel == None:
+        args.ylabel = args.order_parameter
     return args
 
 
@@ -43,7 +48,7 @@ def calc_tot(folder, args):
 
 
 def labels(args):
-    return '', '', ''
+    return args.xlabel, args.ylabel, args.label
 
 
 def params_from_name(name):
