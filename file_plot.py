@@ -35,6 +35,8 @@ for f in args.files:
         except ValueError:
             x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True, dtype=complex)
             x, y = np.abs(x), np.abs(y)
+        except OSError:
+            print("OSError for " + f + ", probably file does not exist")
         y = y - 1 if args.minus_one else y
         lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
         if args.loglog:

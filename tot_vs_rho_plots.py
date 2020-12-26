@@ -24,7 +24,7 @@ def parse():
     args.height = float(args.height)
     args.rho = [float(r) for r in args.rho.strip('()').split(',')]
     if args.ylabel is None and len(args.order_parameter) == 1:
-        args.ylabel = prepare_lbl(args.order_parameter[0])
+        args.ylabel = prepare_lbl(args.order_parameter[0], corr=False)
     else:
         args.ylabel = ''
     return args
@@ -102,7 +102,7 @@ def main():
                 x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j], ic, N)]
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
-                    label += ', ' + prepare_lbl(op)
+                    label += ', ' + prepare_lbl(op, corr=False)
                 I = np.argsort(x_ic)
                 x_ic, y = np.array(x_ic)[I], np.array(y)[I]
                 plt.plot(x_ic, y, '.-', label=label)
