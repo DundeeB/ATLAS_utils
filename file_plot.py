@@ -37,6 +37,7 @@ for f in args.files:
             x, y = np.abs(x), np.abs(y)
         except OSError:
             print("OSError for " + f + ", probably file does not exist")
+            continue
         y = y - 1 if args.minus_one else y
         lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
         if args.loglog:
