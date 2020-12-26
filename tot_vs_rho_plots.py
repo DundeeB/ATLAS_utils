@@ -18,6 +18,7 @@ def parse():
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
+    parser.add_argument('-bsm_bs', '--bsm_bs', type=bool, nargs='?', default=False, const=True)
     args = parser.parse_args()
     args.N = [int(float(N)) for N in args.N]
     args.height = float(args.height)
@@ -93,18 +94,28 @@ def main():
     plt.ylabel(args.ylabel)
 
     folders, x, ics = choose_folders(args)
+    choose = lambda folder, ic, N: (params_from_name(folder)[-1] == ic and params_from_name(folder)[0] == N)
     for i, ic in enumerate(args.ic):
-        for op in args.order_parameter:
-            for N in args.N:
-                choose = lambda folder: (params_from_name(folder)[-1] == ic and params_from_name(folder)[0] == N)
-                y = [calc_tot(folder, op) for folder in folders if choose(folder)]
-                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j])]
+        for N in args.N:
+            for op in args.order_parameter:
+                y = [calc_tot(folder, op) for folder in folders if choose(folder, ic, N)]
+                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j], ic, N)]
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
-                    label += ', ' + op
+                    label += ', ' + prepare_lbl(op)
                 I = np.argsort(x_ic)
                 x_ic, y = np.array(x_ic)[I], np.array(y)[I]
                 plt.plot(x_ic, y, '.-', label=label)
+            if args.bsm_bs:
+                y_bs = [calc_tot(folder, "Bragg_S") for folder in folders if choose(folder, ic, N)]
+                y_bsm = [calc_tot(folder, "Bragg_Sm") for folder in folders if choose(folder, ic, N)]
+                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j], ic, N)]
+                y = np.array(y_bsm) / np.array(y_bs)
+                label = 'N=' + str(N) + ', Initial conditions = ' + ic + ', $\\Psi_k^M/\\Psi_k$'
+                I = np.argsort(x_ic)
+                x_ic, y = np.array(x_ic)[I], np.array(y)[I]
+                plt.plot(x_ic, y, '.-', label=label)
+
     plt.legend()
     plt.show()
 

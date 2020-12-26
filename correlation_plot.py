@@ -13,13 +13,19 @@ def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     return sorted_phi_files, sorted_phi_reals
 
 
-def prepare_lbl(lbl):
+def prepare_lbl(lbl, corr=True):
     lbl = re.sub('_', ' ', lbl)
-    for mn in ['14', '23', '16']:
-        lbl = re.sub('psi ' + mn, '$\\\psi_{' + mn + '}$', lbl)
     lbl = re.sub('rhoH', '$\\\\rho_H$', lbl)
-    lbl = re.sub('Bragg Sm', '$S_m(k^{peak})$', lbl)
-    lbl = re.sub('Bragg S', '$S(k^{peak})$', lbl)
+    if corr:
+        for mn in ['14', '23', '16']:
+            lbl = re.sub('psi ' + mn, '$g_{' + mn + '}$', lbl)
+        lbl = re.sub('Bragg Sm', '$g_k^M$', lbl)
+        lbl = re.sub('Bragg S', '$g_k$', lbl)
+    else:
+        for mn in ['14', '23', '16']:
+            lbl = re.sub('psi ' + mn, '$\\\Psi_{' + mn + '}$', lbl)
+        lbl = re.sub('Bragg Sm', '$\\\Psi_k^M$', lbl)
+        lbl = re.sub('Bragg S', '$\\\Psi_k$', lbl)
     for N, N_ in zip(['10000', '40000', '90000'], ['1e4', '4e4', '9e4']):
         lbl = re.sub(N, N_, lbl)
     lbl = re.sub('\,', ',', lbl)
