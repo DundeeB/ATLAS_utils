@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 
+
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
@@ -39,6 +40,7 @@ def main():
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['-'], help='style of lines')
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
+    parser.add_argument('-gM', '--gM', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
     parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
@@ -79,6 +81,8 @@ def main():
         op_dirs.append('Bragg_Sm')
     if args.pos:
         op_dirs.append('pos')
+    if args.gM is not None:
+        op_dirs.append('gM_k=' + args.gM)
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
