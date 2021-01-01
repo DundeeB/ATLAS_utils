@@ -40,7 +40,8 @@ def main():
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['-'], help='style of lines')
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
-    parser.add_argument('-gM', '--gM', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6')
+    parser.add_argument('-gMd', '--gMd', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6 directed')
+    parser.add_argument('-gMud', '--gMud', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6 undirected')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
     parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
@@ -81,8 +82,10 @@ def main():
         op_dirs.append('Bragg_Sm')
     if args.pos:
         op_dirs.append('pos')
-    if args.gM is not None:
-        op_dirs.append('gM_k=' + args.gM)
+    if args.gMd is not None:
+        op_dirs.append('gM_k=' + args.gMd + '_directed')
+    if args.gMud is not None:
+        op_dirs.append('gM_k=' + args.gMud + '_undirected')
 
     size = 15
     params = {'legend.fontsize': 'large', 'figure.figsize': (20, 8), 'axes.labelsize': size, 'axes.titlesize': size,
