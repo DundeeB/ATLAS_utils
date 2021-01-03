@@ -153,7 +153,8 @@ def main():
                     y_init = maxys[i - 1]
                     x_init = maxxs[i - 1]
             y = y_init * np.power(x / x_init, -slope)
-            plt.loglog(x, y, '--', label='polynomial fit with slope ' + str(slope), linewidth=2)
+            # plt.loglog(x, y, '--', label='polynomial fit with slope ' + str(slope), linewidth=2)
+            plt.semilogy(x, y, '--', label='polynomial fit with slope ' + str(slope), linewidth=2)
 
     plt.grid()
     plt.legend()
