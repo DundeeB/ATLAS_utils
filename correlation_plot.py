@@ -41,7 +41,8 @@ def main():
 
     parser.add_argument('-mn', '--psis_mn', type=str, nargs='?', default=None, help='mn=14,23,16')
     parser.add_argument('-gMd', '--gMd', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6 directed')
-    parser.add_argument('-gMud', '--gMud', type=str, nargs='?', default=None, help='k_nearest_neighbors=3,4,6 undirected')
+    parser.add_argument('-gMud', '--gMud', type=str, nargs='?', default=None,
+                        help='k_nearest_neighbors=3,4,6 undirected')
     parser.add_argument('-up', '--upper', type=bool, nargs='?', const=True, default=False,
                         help='plot upper correlations for psi_mn')
     parser.add_argument('-bs', '--bragg_s', type=bool, nargs='?', const=True, default=False,
@@ -61,6 +62,8 @@ def main():
                         help='Sum realizations backwards')
     parser.add_argument('-max', '--max', type=bool, nargs='?', const=True, default=False,
                         help='Plot polynomial fit with max instead of mean')
+    parser.add_argument('-lgy', '--semilogy', type=bool, nargs='?', const=True, default=False,
+                        help='Semilogy plot instead of log log')
 
     args = parser.parse_args()
     if len(args.style) == 1:
@@ -116,7 +119,12 @@ def main():
                 if op_dir == "pos":
                     y = y - 1
                 y[np.where(y <= 0)] = np.nan
-                plt.loglog(x, y, s, label=prepare_lbl(lbl_), linewidth=2, markersize=6)
+                kwargsplt = {'label': prepare_lbl(lbl_), 'linewidth': 2, 'markersize': 6}
+                argsplt = [x, y, s]
+                if not args.semilogy:
+                    plt.loglog(*argsplt, **kwargsplt)
+                else:
+                    plt.semilogy(*argsplt, **kwargsplt)
                 if args.pol:
                     if args.max:
                         maxys.append(np.nanmax(y))
@@ -153,15 +161,18 @@ def main():
                     y_init = maxys[i - 1]
                     x_init = maxxs[i - 1]
             y = y_init * np.power(x / x_init, -slope)
-            # plt.loglog(x, y, '--', label='polynomial fit with slope ' + str(slope), linewidth=2)
-            plt.semilogy(x, y, '--', label='polynomial fit with slope ' + str(slope), linewidth=2)
+            args = [x, y, '--']
+            kwargs = {'label': 'polynomial fit with slope ' + str(slope), 'linewidth': 2}
+            if not args.semilogy:
+                plt.loglog(*args, **kwargs)
+            else:
+                plt.semilogy(*args, **kwargs)
 
-    plt.grid()
-    plt.legend()
-    plt.xlabel('$\Delta$r [$\sigma$=2]')
-    plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
-    plt.show()
+        plt.grid()
+        plt.legend()
+        plt.xlabel('$\Delta$r [$\sigma$=2]')
+        plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
+        plt.show()
 
-
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()
