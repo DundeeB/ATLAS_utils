@@ -1,4 +1,4 @@
-#!/Local/cmp/anaconda3/bin/python -u
+#!/Local/ph_daniel/anaconda3/bin/python -u
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
