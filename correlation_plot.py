@@ -168,11 +168,11 @@ def main():
             else:
                 plt.semilogy(*args, **kwargs)
 
-        plt.grid()
-        plt.legend()
-        plt.xlabel('$\Delta$r [$\sigma$=2]')
-        plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
-        plt.show()
+    plt.grid()
+    plt.legend()
+    plt.xlabel('$\Delta$r [$\sigma$=2]')
+    plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
+    plt.show()
 
 if __name__ == "__main__":
     main()
