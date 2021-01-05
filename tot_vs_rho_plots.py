@@ -9,6 +9,7 @@ from correlation_plot import get_corr_files, prepare_lbl
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
 
+# TODO: M=sum(c(n)g_M(n))
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='+', help='N values to plot')
@@ -46,6 +47,11 @@ def choose_folders(args):
 
 def calc_tot(folder, op):
     op_dir = os.path.join(father_dir, folder, 'OP', op)
+    if op.startswith('gM'):
+        corr_file = get_corr_files(op_dir)[0][0]
+        n, gM, c = np.loadtxt(corr_file, unpack=True)
+        N = c[0]
+        return 1 / N ** 2 * np.sum(gM * c)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     if op.startswith('Bragg_S'):

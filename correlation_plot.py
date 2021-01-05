@@ -6,6 +6,8 @@ import os
 import re
 
 
+# TODO: frusted bonds plot based on k nearest neighbors undirect graph
+
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
@@ -27,6 +29,7 @@ def prepare_lbl(lbl, corr=True):
             lbl = re.sub('psi ' + mn, '$\\\Psi_{' + mn + '}$', lbl)
         lbl = re.sub('Bragg Sm', '$\\\Psi_k^M$', lbl)
         lbl = re.sub('Bragg S', '$\\\Psi_k$', lbl)
+        lbl = re.sub('gM', 'M', lbl)
     for N, N_ in zip(['10000', '40000', '90000'], ['1e4', '4e4', '9e4']):
         lbl = re.sub(N, N_, lbl)
     lbl = re.sub('\,', ',', lbl)
@@ -106,6 +109,7 @@ def main():
                 reals = min(args.reals, len(phi_files) - 1)
                 if reals > 1:
                     counts_sum = counts
+                    # TODO - for topological distance length of y for different realization is different, so adapt it
                     y_sum = y * counts if op_dirs != 'pos' else y
                     for i in range(1, reals):
                         _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
@@ -173,6 +177,7 @@ def main():
     plt.xlabel('$\Delta$r [$\sigma$=2]')
     plt.ylabel('Correlation $<\\psi\\psi^*>$' if not args.pos else 'g(r)-1')
     plt.show()
+
 
 if __name__ == "__main__":
     main()
