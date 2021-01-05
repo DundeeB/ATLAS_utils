@@ -49,7 +49,7 @@ def calc_tot(folder, op):
     op_dir = os.path.join(father_dir, folder, 'OP', op)
     if op.startswith('gM'):
         corr_file = get_corr_files(op_dir)[0][0]
-        n, gM, c = np.loadtxt(corr_file, unpack=True)
+        n, gM, c = np.loadtxt(corr_file, unpack=True, usecols=(0, 1, 2))
         N = c[0]
         return 1 / N ** 2 * np.sum(gM * c)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
