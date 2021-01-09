@@ -82,26 +82,26 @@ def main():
                                     plt.plot(ex, ey, 'r-')
                                     if (args.frustrated_bonds > 0) and (spins[i] * spins[j] < 0):
                                         plt.plot(ex, ey, 'g-', linewidth=0.1)
-                    else:
-                        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
-                i += 1
-        plt.grid()
-        if args.leg_loc > 0:
-            plt.legend(loc=args.leg_loc)
-        plt.xlabel(args.x_label)
-        plt.ylabel(args.y_label)
-        size = 15
-        params = {'legend.fontsize': 'large',
-                  'figure.figsize': (20, 8),
-                  'axes.labelsize': size,
-                  'axes.titlesize': size,
-                  'xtick.labelsize': size * 0.75,
-                  'ytick.labelsize': size * 0.75,
-                  'axes.titlepad': 25}
-        plt.rcParams.update(params)
-        if not args.not_equal:
-            plt.axis('equal')
-        plt.show()
+                else:
+                    plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+            i += 1
+    plt.grid()
+    if args.leg_loc > 0:
+        plt.legend(loc=args.leg_loc)
+    plt.xlabel(args.x_label)
+    plt.ylabel(args.y_label)
+    size = 15
+    params = {'legend.fontsize': 'large',
+              'figure.figsize': (20, 8),
+              'axes.labelsize': size,
+              'axes.titlesize': size,
+              'xtick.labelsize': size * 0.75,
+              'ytick.labelsize': size * 0.75,
+              'axes.titlepad': 25}
+    plt.rcParams.update(params)
+    if not args.not_equal:
+        plt.axis('equal')
+    plt.show()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
