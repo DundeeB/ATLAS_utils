@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from sys import path
+
 path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
 from post_process import MagneticTopologicalCorr
 
@@ -23,7 +24,8 @@ def parse():
     parser.add_argument('-z', '--z_colour', type=bool, nargs='?', const=True, default=False,
                         help='colour upper and lower spheres with different colours')
     parser.add_argument('-b', '--bonds', type=int, nargs='?', help='Plot bonds using k nearest neighbors')
-    parser.add_argument('-fb', '--frustrated_bonds', type=int, nargs='?', help='Plot bonds connecting in-layer')
+    parser.add_argument('-fb', '--frustrated_bonds', type=bool, nargs='?', const=True, default=False,
+                        help='Plot bonds connecting in-layer')
     return parser.parse_args()
 
 
