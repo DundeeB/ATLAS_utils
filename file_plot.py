@@ -28,6 +28,8 @@ def parse():
     parser.add_argument('-b', '--bonds', type=int, nargs='?', help='Plot bonds using k nearest neighbors')
     parser.add_argument('-fb', '--frustrated_bonds', type=int, nargs='?', default=0,
                         help='1 - Plot frustrated bonds only. 2 - dont even plot spheres.')
+    parser.add_argument('-burg', '--burg', type=bool, nargs='?', default=False, const=True,
+                        help='Quiver burger file if exists')
     return parser.parse_args()
 
 
@@ -44,6 +46,7 @@ def main():
 
     i = 0
     for f in args.files:
+        sim_path = os.path.dirname(os.path.abspath(f))
         for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
             try:
                 x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
@@ -66,7 +69,7 @@ def main():
                         plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
                         plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
                     if args.bonds is not None:
-                        op = MagneticTopologicalCorr(sim_path=os.path.dirname(os.path.abspath(f)),
+                        op = MagneticTopologicalCorr(sim_path=sim_path,
                                                      k_nearest_neighbors=args.bonds, directed=False,
                                                      centers=[r for r in zip(x, y, z)])
                         op.calc_order_parameter()
@@ -84,6 +87,12 @@ def main():
                                         plt.plot(ex, ey, 'g-', linewidth=0.1)
                 else:
                     plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+                if args.burg:
+                    real = os.path.basename(f)
+                    burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
+                    burg = np.loadtxt(burg_file)
+                    plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',
+                               scale=1, label='Burger field for real ' + str(real))
             i += 1
     plt.grid()
     if args.leg_loc > 0:
@@ -102,6 +111,7 @@ def main():
     if not args.not_equal:
         plt.axis('equal')
     plt.show()
+
 
 if __name__ == "__main__":
     main()
