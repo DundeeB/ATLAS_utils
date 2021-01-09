@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from sys import path
+import os
 
 path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
 from post_process import MagneticTopologicalCorr
@@ -63,8 +64,8 @@ def main():
                     plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
                     plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
                     if args.bonds is not None:
-                        op = MagneticTopologicalCorr(sim_path=f, k_nearest_neighbors=args.bonds, directed=False,
-                                                     centers=[r for r in zip(x, y, z)])
+                        op = MagneticTopologicalCorr(sim_path=os.path.dirname(f), k_nearest_neighbors=args.bonds,
+                                                     directed=False, centers=[r for r in zip(x, y, z)])
                         op.calc_order_parameter()
                         graph = op.graph
                         spins = op.op_vec
