@@ -9,6 +9,7 @@ path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
 from post_process import MagneticTopologicalCorr
 
 
+# TODO: frustrated bonds plot based on k nearest neighbors undirect graph
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-f', '--files', type=str, nargs='+', help='files to read data and plot from')
@@ -25,8 +26,8 @@ def parse():
     parser.add_argument('-z', '--z_colour', type=bool, nargs='?', const=True, default=False,
                         help='colour upper and lower spheres with different colours')
     parser.add_argument('-b', '--bonds', type=int, nargs='?', help='Plot bonds using k nearest neighbors')
-    parser.add_argument('-fb', '--frustrated_bonds', type=bool, nargs='?', const=True, default=False,
-                        help='Plot bonds connecting in-layer')
+    parser.add_argument('-fb', '--frustrated_bonds', type=int, nargs='?', default=0,
+                        help='1 - Plot frustrated bonds only. 2 - dont even plot spheres.')
     return parser.parse_args()
 
 
@@ -59,10 +60,11 @@ def main():
             else:
                 if args.z_colour or (args.bonds is not None):
                     x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
-                    up = np.where(z > np.mean(z))
-                    down = np.where(z <= np.mean(z))
-                    plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
-                    plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
+                    if args.frustrated_bonds < 2:
+                        up = np.where(z > np.mean(z))
+                        down = np.where(z <= np.mean(z))
+                        plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
+                        plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
                     if args.bonds is not None:
                         op = MagneticTopologicalCorr(sim_path=os.path.dirname(os.path.abspath(f)),
                                                      k_nearest_neighbors=args.bonds, directed=False,
@@ -72,31 +74,34 @@ def main():
                         spins = op.op_vec
                         for i in range(len(x)):
                             for j in graph.getrow(i).indices:
+                                ex = [x[i], x[j]]
+                                ey = [y[i], y[j]]
+                                if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
+                                    continue
                                 if spins[i] * spins[j] > 0:
-                                    plt.plot([x[i], x[j]], [y[i], y[j]], 'r-')
-                                if (not args.frustrated_bonds) and (spins[i] * spins[j] < 0):
-                                    plt.plot([x[i], x[j]], [y[i], y[j]], 'g-', linewidth=0.1)
-                else:
-                    plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
-            i += 1
-    plt.grid()
-    if args.leg_loc > 0:
-        plt.legend(loc=args.leg_loc)
-    plt.xlabel(args.x_label)
-    plt.ylabel(args.y_label)
-    size = 15
-    params = {'legend.fontsize': 'large',
-              'figure.figsize': (20, 8),
-              'axes.labelsize': size,
-              'axes.titlesize': size,
-              'xtick.labelsize': size * 0.75,
-              'ytick.labelsize': size * 0.75,
-              'axes.titlepad': 25}
-    plt.rcParams.update(params)
-    if not args.not_equal:
-        plt.axis('equal')
-    plt.show()
+                                    plt.plot(ex, ey, 'r-')
+                                    if (args.frustrated_bonds > 0) and (spins[i] * spins[j] < 0):
+                                        plt.plot(ex, ey, 'g-', linewidth=0.1)
+                    else:
+                        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+                i += 1
+        plt.grid()
+        if args.leg_loc > 0:
+            plt.legend(loc=args.leg_loc)
+        plt.xlabel(args.x_label)
+        plt.ylabel(args.y_label)
+        size = 15
+        params = {'legend.fontsize': 'large',
+                  'figure.figsize': (20, 8),
+                  'axes.labelsize': size,
+                  'axes.titlesize': size,
+                  'xtick.labelsize': size * 0.75,
+                  'ytick.labelsize': size * 0.75,
+                  'axes.titlepad': 25}
+        plt.rcParams.update(params)
+        if not args.not_equal:
+            plt.axis('equal')
+        plt.show()
 
-
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()

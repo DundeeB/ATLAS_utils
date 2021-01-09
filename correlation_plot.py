@@ -6,8 +6,6 @@ import os
 import re
 
 
-# TODO: frustrated bonds plot based on k nearest neighbors undirect graph
-
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]
     phi_reals = [int(re.split('\.', re.split('_', corr_file)[-1])[0]) for corr_file in phi_files]
@@ -109,7 +107,6 @@ def main():
                 reals = min(args.reals, len(phi_files) - 1)
                 if reals > 1:
                     counts_sum = counts
-                    # TODO - for topological distance length of y for different realization is different, so adapt it
                     y_sum = y * counts if op_dirs != 'pos' else y
                     for i in range(1, reals):
                         _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
