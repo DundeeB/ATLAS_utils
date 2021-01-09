@@ -72,9 +72,9 @@ def main():
                         spins = op.op_vec
                         for i in range(len(x)):
                             for j in graph.getrow(i).indices:
-                                if spins(i) * spins(j) > 0:
+                                if spins[i] * spins[j] > 0:
                                     plt.plot([x[i], x[j]], [y[i], y[j]], 'r-')
-                                if (not args.frustrated_bonds) and (spins(i) * spins(j) < 0):
+                                if (not args.frustrated_bonds) and (spins[i] * spins[j] < 0):
                                     plt.plot([x[i], x[j]], [y[i], y[j]], 'g-', linewidth=0.1)
                 else:
                     plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)

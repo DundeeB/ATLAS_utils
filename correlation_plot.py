@@ -114,8 +114,9 @@ def main():
                     for i in range(1, reals):
                         _, y, counts = np.loadtxt(corr_path(phi_files[i]), usecols=(0, 1, 2), unpack=True)
                         y[np.where(np.isnan(y))] = 0
-                        y_sum += y * counts if op_dirs != 'pos' else y
-                        counts_sum += counts
+                        l = min(len(y), len(y_sum))
+                        y_sum[:l] += y[:l] * counts[:l] if op_dirs != 'pos' else y[:l]
+                        counts_sum[:l] += counts[:l]
                     lbl_ += ' mean of ' + str(reals) + ' realizations'
                     y = y_sum / counts_sum if op_dirs != 'pos' else y_sum / reals
                 if args.abs:
