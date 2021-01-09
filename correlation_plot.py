@@ -6,7 +6,7 @@ import os
 import re
 
 
-# TODO: frusted bonds plot based on k nearest neighbors undirect graph
+# TODO: frustrated bonds plot based on k nearest neighbors undirect graph
 
 def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
     phi_files = [corr_file for corr_file in os.listdir(OP_sub_dir) if corr_file.startswith(prefix)]

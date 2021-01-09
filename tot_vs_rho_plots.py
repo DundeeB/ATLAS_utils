@@ -9,7 +9,6 @@ from correlation_plot import get_corr_files, prepare_lbl
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
 
-# TODO: M=sum(c(n)g_M(n))
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='+', help='N values to plot')
@@ -19,7 +18,6 @@ def parse():
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
-    parser.add_argument('-bsm_bs', '--bsm_bs', type=bool, nargs='?', default=False, const=True)
     args = parser.parse_args()
     args.N = [int(float(N)) for N in args.N]
     args.height = float(args.height)
@@ -112,16 +110,6 @@ def main():
                 I = np.argsort(x_ic)
                 x_ic, y = np.array(x_ic)[I], np.array(y)[I]
                 plt.plot(x_ic, y, '.-', label=label)
-            if args.bsm_bs:
-                y_bs = [calc_tot(folder, "Bragg_S") for folder in folders if choose(folder, ic, N)]
-                y_bsm = [calc_tot(folder, "Bragg_Sm") for folder in folders if choose(folder, ic, N)]
-                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j], ic, N)]
-                y = np.array(y_bsm) / np.array(y_bs)
-                label = 'N=' + str(N) + ', Initial conditions = ' + ic + ', $\\Psi_k^M/\\Psi_k$'
-                I = np.argsort(x_ic)
-                x_ic, y = np.array(x_ic)[I], np.array(y)[I]
-                plt.plot(x_ic, y, '.-', label=label)
-
     plt.legend()
     plt.show()
 
