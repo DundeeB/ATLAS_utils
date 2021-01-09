@@ -2,6 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+from sys import path
+path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
 from post_process import MagneticTopologicalCorr
 
 
