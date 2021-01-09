@@ -82,8 +82,8 @@ def main():
                                     continue
                                 if spins[i] * spins[j] > 0:
                                     plt.plot(ex, ey, 'r-')
-                                    if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
-                                        plt.plot(ex, ey, 'g-', linewidth=0.1)
+                                if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
+                                    plt.plot(ex, ey, 'g-', linewidth=0.1)
                 else:
                     plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
                 if args.burg:
