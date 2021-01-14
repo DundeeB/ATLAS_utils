@@ -24,6 +24,7 @@ def parse():
     parser.add_argument('-lgy', '--semilogy', type=bool, nargs='?', const=True, default=False)
     parser.add_argument('-lgx', '--semilogx', type=bool, nargs='?', const=True, default=False)
     parser.add_argument('-m1', '--minus_one', type=bool, nargs='?', const=True, default=False)
+    parser.add_argument('-abs', '--abs', type=bool, nargs='?', const=True, default=False)
     parser.add_argument('-z', '--z_colour', type=bool, nargs='?', const=True, default=False,
                         help='colour upper and lower spheres with different colours')
     parser.add_argument('-b', '--bonds', type=int, nargs='?', help='Plot bonds using k nearest neighbors')
@@ -58,6 +59,7 @@ def main():
                 print("OSError for " + f + ", probably file does not exist")
                 continue
             y = y - 1 if args.minus_one else y
+            y = np.abs(y) if args.abs else y
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
             plotted = False
             if args.loglog:
