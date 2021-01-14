@@ -55,7 +55,7 @@ def calc_tot(folder, op):
         return 1 / N ** 2 * np.sum(gM * c)
     if op.startswith('Ising'):
         groud_states, reals = get_corr_files(op_dir, 'ground_state_')
-        groud_state, real = groud_states[-1], reals[-1]
+        groud_state, real = np.loadtxt(os.path.join(op_dir, groud_states[-1])), reals[-1]
         sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
         z = [r[2] for r in sp]
         H = max(z)
