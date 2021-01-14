@@ -114,8 +114,16 @@ def main():
     for i, ic in enumerate(args.ic):
         for N in args.N:
             for op in args.order_parameter:
-                y = [calc_tot(folder, op) for folder in folders if choose(folder, ic, N)]
-                x_ic = [x_ for j, x_ in enumerate(x) if choose(folders[j], ic, N)]
+                y = []
+                x_ic = []
+                for j, folder in enumerate(folders):
+                    if not choose(folder, ic, N):
+                        continue
+                    try:
+                        y.append(calc_tot(folder, op))
+                        x_ic.append(x[j])
+                    except Exception as err:
+                        print(err)
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
                     label += ', ' + prepare_lbl(op, corr=False)
