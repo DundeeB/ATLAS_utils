@@ -20,8 +20,10 @@ def parse():
     parser.add_argument('-L', '--leg_loc', type=int, nargs='?', help='legends location, 0 turn of legend', default=1)
     parser.add_argument('-s', '--style', type=str, nargs='*', default=['.'], help='legends of plot')
     parser.add_argument('-neq', '--not_equal', type=bool, nargs='?', const=True, default=False, help='axis equal')
-    parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False, help='axis equal')
-    parser.add_argument('-m1', '--minus_one', type=bool, nargs='?', const=True, default=False, help='axis equal')
+    parser.add_argument('-lg', '--loglog', type=bool, nargs='?', const=True, default=False)
+    parser.add_argument('-lgy', '--semilogy', type=bool, nargs='?', const=True, default=False)
+    parser.add_argument('-lgx', '--semilogx', type=bool, nargs='?', const=True, default=False)
+    parser.add_argument('-m1', '--minus_one', type=bool, nargs='?', const=True, default=False)
     parser.add_argument('-z', '--z_colour', type=bool, nargs='?', const=True, default=False,
                         help='colour upper and lower spheres with different colours')
     parser.add_argument('-b', '--bonds', type=int, nargs='?', help='Plot bonds using k nearest neighbors')
@@ -57,41 +59,50 @@ def main():
                 continue
             y = y - 1 if args.minus_one else y
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
+            plotted = False
             if args.loglog:
                 plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
+                plotted = True
+            if args.semilogy:
+                plt.semilogy(x, y, s, label=lbl, linewidth=2, markersize=6)
+                plotted = True
+            if args.semilogx:
+                plt.semilogx(x, y, s, label=lbl, linewidth=2, markersize=6)
+                plotted = True
+            if plotted:
+                continue
+            if args.z_colour or (args.bonds is not None):
+                x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
+                if args.frustrated_bonds < 2:
+                    up = np.where(z > np.mean(z))
+                    down = np.where(z <= np.mean(z))
+                    plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
+                    plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
+                if args.bonds is not None:
+                    op = MagneticTopologicalCorr(sim_path=sim_path,
+                                                 k_nearest_neighbors=args.bonds, directed=False,
+                                                 centers=[r for r in zip(x, y, z)])
+                    op.calc_order_parameter()
+                    graph = op.graph
+                    spins = op.op_vec
+                    for i in range(len(x)):
+                        for j in graph.getrow(i).indices:
+                            ex = [x[i], x[j]]
+                            ey = [y[i], y[j]]
+                            if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
+                                continue
+                            if spins[i] * spins[j] > 0:
+                                plt.plot(ex, ey, 'r-')
+                            if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
+                                plt.plot(ex, ey, 'g-', linewidth=0.1)
             else:
-                if args.z_colour or (args.bonds is not None):
-                    x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
-                    if args.frustrated_bonds < 2:
-                        up = np.where(z > np.mean(z))
-                        down = np.where(z <= np.mean(z))
-                        plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
-                        plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
-                    if args.bonds is not None:
-                        op = MagneticTopologicalCorr(sim_path=sim_path,
-                                                     k_nearest_neighbors=args.bonds, directed=False,
-                                                     centers=[r for r in zip(x, y, z)])
-                        op.calc_order_parameter()
-                        graph = op.graph
-                        spins = op.op_vec
-                        for i in range(len(x)):
-                            for j in graph.getrow(i).indices:
-                                ex = [x[i], x[j]]
-                                ey = [y[i], y[j]]
-                                if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
-                                    continue
-                                if spins[i] * spins[j] > 0:
-                                    plt.plot(ex, ey, 'r-')
-                                if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
-                                    plt.plot(ex, ey, 'g-', linewidth=0.1)
-                else:
-                    plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
-                if args.burg:
-                    real = os.path.basename(f)
-                    burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
-                    burg = np.loadtxt(burg_file)
-                    plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',
-                               scale=1, label='Burger field for real ' + str(real))
+                plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+            if args.burg:
+                real = os.path.basename(f)
+                burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
+                burg = np.loadtxt(burg_file)
+                plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',
+                           scale=1, label='Burger field for real ' + str(real))
             i += 1
     plt.grid()
     if args.leg_loc > 0:
