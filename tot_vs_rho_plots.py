@@ -9,6 +9,9 @@ from correlation_plot import get_corr_files, prepare_lbl
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
 
+# TODO: magnetization based on ising ground state partition M=sum(si*zi) where zi the normalized height and si the ising
+#  ground state sign of the i'th node
+
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='+', help='N values to plot')

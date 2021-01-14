@@ -9,6 +9,9 @@ path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
 from post_process import MagneticTopologicalCorr
 
 
+# TODO: Add xy plot coloring by correlation of up-down to ising's ground state
+# TODO: proper Bragg peak 2d illustration
+
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-f', '--files', type=str, nargs='+', help='files to read data and plot from')
