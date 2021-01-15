@@ -64,13 +64,13 @@ def calc_tot(folder, op):
         A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'annel_')[0][0]))
         minE = float('inf')
         argminE = None
-        reals = int((len(A) - 1) / 2)
+        reals = int((A.shape[1] - 1) / 2)
         for i in range(reals):
-            m = min(A[i, :])
+            m = min(A[:, i])
             if m < minE:
                 minE = m
                 argminE = i
-        return A[reals + argminE, -1]
+        return A[-1, reals + argminE]
 
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
