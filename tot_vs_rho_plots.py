@@ -70,7 +70,7 @@ def calc_tot(folder, op):
             if m < minE:
                 minE = m
                 argminE = i
-        return A[-1, reals + argminE]
+        return np.abs(A[-1, reals + argminE])
 
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
