@@ -65,7 +65,7 @@ def calc_tot(folder, op):
         minE = float('inf')
         argminE = None
         reals = int((A.shape[1] - 1) / 2)
-        for i in range(reals):
+        for i in range(1, reals + 1):
             m = min(A[:, i])
             if m < minE:
                 minE = m
