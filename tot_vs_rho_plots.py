@@ -61,7 +61,7 @@ def calc_tot(folder, op):
         # H = max(z)
         # s = [1 if z_ > H / 2 else -1 for z_ in z]
         # return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
-        A = np.loadtxt(get_corr_files(op_dir, 'annel_')[0][0])
+        A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'annel_')[0][0]))
         minE = float('inf')
         argminE = None
         reals = int((len(A) - 1) / 2)
