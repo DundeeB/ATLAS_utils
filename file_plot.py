@@ -42,7 +42,7 @@ def parse():
     return parser.parse_args()
 
 
-def plt(args, f, x_col, y_col, s, yscale, sim_path, real):
+def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real):
     try:
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
     except ValueError:
@@ -113,13 +113,13 @@ def main():
         for f, x_col, y_col, s, yscale in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling):
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
-            plt(args, f, x_col, y_col, s, yscale, sim_path, real)
+            plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
     else:
         for f in args.files:
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
             for x_col, y_col, s, yscale in zip(args.x_column, args.y_column, args.style, args.yscaling):
-                plt(args, f, x_col, y_col, s, yscale, sim_path, real)
+                plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
     plt.grid()
     if args.leg_loc > 0:
         plt.legend(loc=args.leg_loc)
