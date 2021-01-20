@@ -106,9 +106,19 @@ def main():
     params = [args.files] if args.folder_grid_off else []
     params += [args.x_column, args.y_column, args.style, args.yscaling, args.legends]
     n_xy = max([len(param) for param in params])
-    for i in range(len(params)):
-        if len(params[i]) == 1:
-            params[i] = [params[i][0] for _ in range(n_xy)]
+    if args.folder_grid_off:
+        if len(args.files) == 1:
+            args.files = [args.files[0] for _ in range(n_xy)]
+    if len(args.x_column) == 1:
+        args.x_column = [args.x_column[0] for _ in range(n_xy)]
+    if len(args.y_column) == 1:
+        args.y_column = [args.y_column[0] for _ in range(n_xy)]
+    if len(args.style) == 1:
+        args.style = [args.style[0] for _ in range(n_xy)]
+    if len(args.yscaling) == 1:
+        args.yscaling = [args.yscaling[0] for _ in range(n_xy)]
+    if len(args.legends) == 1:
+        args.legends = [args.legends[0] for _ in range(n_xy)]
 
     if args.folder_grid_off:
         for f, x_col, y_col, s, yscale, lbl in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling,
