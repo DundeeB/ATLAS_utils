@@ -36,7 +36,67 @@ def parse():
     parser.add_argument('-burg', '--burg', type=bool, nargs='?', default=False, const=True,
                         help='Quiver burger file if exists')
     parser.add_argument('-yscaling', '--yscaling', type=float, nargs='*', default=[1], help='y scaling')
+    parser.add_argument('-folder_grid_off', '--folder_grid_off', type=bool, nargs='?', const=True, default=False,
+                        help='For a list of folders and lists of say x_coloumns, if folder_grid_off then instead of' +
+                             ' running on all folders and for each plotting x_cloumns, we run on zip(folders,x_coulmn)')
     return parser.parse_args()
+
+
+def plt(args, f, x_col, y_col, s, yscale, sim_path, real):
+    try:
+        x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
+    except ValueError:
+        x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True, dtype=complex)
+        x, y = np.abs(x), np.abs(y)
+    except OSError:
+        print("OSError for " + f + ", probably file does not exist")
+        return
+    y = y - 1 if args.minus_one else y
+    y = np.abs(y) if args.abs else y
+    y *= yscale
+    lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
+    plotted = False
+    if args.loglog:
+        plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
+        plotted = True
+    if args.semilogy:
+        plt.semilogy(x, y, s, label=lbl, linewidth=2, markersize=6)
+        plotted = True
+    if args.semilogx:
+        plt.semilogx(x, y, s, label=lbl, linewidth=2, markersize=6)
+        plotted = True
+    if plotted:
+        return
+    if args.z_colour or (args.bonds is not None):
+        x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
+        if args.frustrated_bonds < 2:
+            up = np.where(z > np.mean(z))
+            down = np.where(z <= np.mean(z))
+            plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
+            plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
+        if args.bonds is not None:
+            op = Graph(sim_path=sim_path, k_nearest_neighbors=args.bonds, directed=False,
+                       centers=[r for r in zip(x, y, z)], spheres_ind=real)
+            op.calc_graph()
+            graph = op.graph
+            spins = op.op_vec
+            for i in range(len(x)):
+                for j in graph.getrow(i).indices:
+                    ex = [x[i], x[j]]
+                    ey = [y[i], y[j]]
+                    if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
+                        continue
+                    if spins[i] * spins[j] > 0:
+                        plt.plot(ex, ey, 'r-')
+                    if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
+                        plt.plot(ex, ey, 'g-', linewidth=0.1)
+    else:
+        plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
+    if args.burg:
+        burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
+        burg = np.loadtxt(burg_file)
+        plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',
+                   scale=1, label='Burger field for real ' + str(real))
 
 
 def main():
@@ -52,66 +112,17 @@ def main():
     if len(args.yscaling) == 1:
         args.yscaling = [args.yscaling[0] for _ in range(n_xy)]
 
-    i = 0
-    for f in args.files:
-        sim_path = os.path.dirname(os.path.abspath(f))
-        real = os.path.basename(f)
-        for x_col, y_col, s, yscale in zip(args.x_column, args.y_column, args.style, args.yscaling):
-            try:
-                x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
-            except ValueError:
-                x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True, dtype=complex)
-                x, y = np.abs(x), np.abs(y)
-            except OSError:
-                print("OSError for " + f + ", probably file does not exist")
-                continue
-            y = y - 1 if args.minus_one else y
-            y = np.abs(y) if args.abs else y
-            y *= yscale
-            lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
-            plotted = False
-            if args.loglog:
-                plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
-                plotted = True
-            if args.semilogy:
-                plt.semilogy(x, y, s, label=lbl, linewidth=2, markersize=6)
-                plotted = True
-            if args.semilogx:
-                plt.semilogx(x, y, s, label=lbl, linewidth=2, markersize=6)
-                plotted = True
-            if plotted:
-                continue
-            if args.z_colour or (args.bonds is not None):
-                x, y, z = np.loadtxt(f, usecols=(0, 1, 2), unpack=True)
-                if args.frustrated_bonds < 2:
-                    up = np.where(z > np.mean(z))
-                    down = np.where(z <= np.mean(z))
-                    plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
-                    plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
-                if args.bonds is not None:
-                    op = Graph(sim_path=sim_path, k_nearest_neighbors=args.bonds, directed=False,
-                               centers=[r for r in zip(x, y, z)], spheres_ind=real)
-                    op.calc_graph()
-                    graph = op.graph
-                    spins = op.op_vec
-                    for i in range(len(x)):
-                        for j in graph.getrow(i).indices:
-                            ex = [x[i], x[j]]
-                            ey = [y[i], y[j]]
-                            if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
-                                continue
-                            if spins[i] * spins[j] > 0:
-                                plt.plot(ex, ey, 'r-')
-                            if (args.frustrated_bonds == 0) and (spins[i] * spins[j] < 0):
-                                plt.plot(ex, ey, 'g-', linewidth=0.1)
-            else:
-                plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
-            if args.burg:
-                burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
-                burg = np.loadtxt(burg_file)
-                plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',
-                           scale=1, label='Burger field for real ' + str(real))
-            i += 1
+    if args.folder_grid_off:
+        for f, x_col, y_col, s, yscale in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling):
+            sim_path = os.path.dirname(os.path.abspath(f))
+            real = os.path.basename(f)
+            plt(args, f, x_col, y_col, s, yscale, sim_path, real)
+    else:
+        for f in args.files:
+            sim_path = os.path.dirname(os.path.abspath(f))
+            real = os.path.basename(f)
+            for x_col, y_col, s, yscale in zip(args.x_column, args.y_column, args.style, args.yscaling):
+                plt(args, f, x_col, y_col, s, yscale, sim_path, real)
     plt.grid()
     if args.leg_loc > 0:
         plt.legend(loc=args.leg_loc)
