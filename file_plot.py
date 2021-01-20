@@ -42,7 +42,7 @@ def parse():
     return parser.parse_args()
 
 
-def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real):
+def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl):
     try:
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
     except ValueError:
@@ -54,7 +54,7 @@ def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real):
     y = y - 1 if args.minus_one else y
     y = np.abs(y) if args.abs else y
     y *= yscale
-    lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
+    lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if lbl is None else lbl
     plotted = False
     if args.loglog:
         plt.loglog(x, y, s, label=lbl, linewidth=2, markersize=6)
@@ -101,16 +101,18 @@ def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real):
 
 def main():
     args = parse()
-    params = [args.x_column, args.y_column, args.style, args.yscaling]
-    if args.folder_grid_off:
-        params += [args.files]
-    n_xy = max([len(l) for l in params])
+    if args.legends is None:
+        args.legends = [None]
+    params = [args.files] if args.folder_grid_off else []
+    params += [args.x_column, args.y_column, args.style, args.yscaling, args.legends]
+    n_xy = max([len(param) for param in params])
     for i in range(len(params)):
         if len(params[i]) == 1:
             params[i] = [params[i][0] for _ in range(n_xy)]
 
     if args.folder_grid_off:
-        for f, x_col, y_col, s, yscale in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling):
+        for f, x_col, y_col, s, yscale, lbl in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling,
+                                                   args.legends):
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
             plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
@@ -118,7 +120,8 @@ def main():
         for f in args.files:
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
-            for x_col, y_col, s, yscale in zip(args.x_column, args.y_column, args.style, args.yscaling):
+            for x_col, y_col, s, yscale, lbl in zip(args.x_column, args.y_column, args.style, args.yscaling,
+                                                    args.legends):
                 plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
     plt.grid()
     if args.leg_loc > 0:
