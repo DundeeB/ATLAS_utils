@@ -115,14 +115,14 @@ def main():
                                                    args.legends):
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
-            plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
+            plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl)
     else:
         for f in args.files:
             sim_path = os.path.dirname(os.path.abspath(f))
             real = os.path.basename(f)
             for x_col, y_col, s, yscale, lbl in zip(args.x_column, args.y_column, args.style, args.yscaling,
                                                     args.legends):
-                plot_params(args, f, x_col, y_col, s, yscale, sim_path, real)
+                plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl)
     plt.grid()
     if args.leg_loc > 0:
         plt.legend(loc=args.leg_loc)
