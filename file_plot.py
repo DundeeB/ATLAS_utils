@@ -101,16 +101,13 @@ def plt(args, f, x_col, y_col, s, yscale, sim_path, real):
 
 def main():
     args = parse()
-
-    n_xy = max([len(args.x_column), len(args.y_column)])
-    if len(args.x_column) == 1:
-        args.x_column = [args.x_column[0] for _ in range(n_xy)]
-    if len(args.y_column) == 1:
-        args.y_column = [args.y_column[0] for _ in range(n_xy)]
-    if len(args.style) == 1:
-        args.style = [args.style[0] for _ in range(n_xy)]
-    if len(args.yscaling) == 1:
-        args.yscaling = [args.yscaling[0] for _ in range(n_xy)]
+    params = [args.x_column, args.y_column, args.style, args.yscaling]
+    if args.folder_grid_off:
+        params += [args.files]
+    n_xy = max([len(l) for l in params])
+    for i in range(len(params)):
+        if len(params[i]) == 1:
+            params[i] = [params[i][0] for _ in range(n_xy)]
 
     if args.folder_grid_off:
         for f, x_col, y_col, s, yscale in zip(args.files, args.x_column, args.y_column, args.style, args.yscaling):
