@@ -6,7 +6,7 @@ from sys import path
 import os
 
 path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
-from post_process import MagneticTopologicalCorr
+from post_process import Graph
 
 
 # TODO: Add xy plot coloring by correlation of up-down to ising's ground state
@@ -35,6 +35,7 @@ def parse():
                         help='1 - Plot frustrated bonds only. 2 - dont even plot spheres.')
     parser.add_argument('-burg', '--burg', type=bool, nargs='?', default=False, const=True,
                         help='Quiver burger file if exists')
+    parser.add_argument('-yscaling', '--yscaling', type=float, nargs='*', default=[1], help='y scaling')
     return parser.parse_args()
 
 
@@ -48,11 +49,14 @@ def main():
         args.y_column = [args.y_column[0] for _ in range(n_xy)]
     if len(args.style) == 1:
         args.style = [args.style[0] for _ in range(n_xy)]
+    if len(args.yscaling) == 1:
+        args.yscaling = [args.yscaling[0] for _ in range(n_xy)]
 
     i = 0
     for f in args.files:
         sim_path = os.path.dirname(os.path.abspath(f))
-        for x_col, y_col, s in zip(args.x_column, args.y_column, args.style):
+        real = os.path.basename(f)
+        for x_col, y_col, s, yscale in zip(args.x_column, args.y_column, args.style, args.yscaling):
             try:
                 x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
             except ValueError:
@@ -63,6 +67,7 @@ def main():
                 continue
             y = y - 1 if args.minus_one else y
             y = np.abs(y) if args.abs else y
+            y *= yscale
             lbl = f + ', x_col=' + str(x_col) + ', y_col=' + str(y_col) if args.legends is None else args.legends[i]
             plotted = False
             if args.loglog:
@@ -84,10 +89,9 @@ def main():
                     plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
                     plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
                 if args.bonds is not None:
-                    op = MagneticTopologicalCorr(sim_path=sim_path,
-                                                 k_nearest_neighbors=args.bonds, directed=False,
-                                                 centers=[r for r in zip(x, y, z)])
-                    op.calc_order_parameter()
+                    op = Graph(sim_path=sim_path, k_nearest_neighbors=args.bonds, directed=False,
+                               centers=[r for r in zip(x, y, z)], spheres_ind=real)
+                    op.calc_graph()
                     graph = op.graph
                     spins = op.op_vec
                     for i in range(len(x)):
@@ -103,7 +107,6 @@ def main():
             else:
                 plt.plot(x, y, s, label=lbl, linewidth=2, markersize=6)
             if args.burg:
-                real = os.path.basename(f)
                 burg_file = os.path.join(sim_path, 'OP/burger_vectors', 'vec_' + str(real) + '.txt')
                 burg = np.loadtxt(burg_file)
                 plt.quiver(burg[:, 0], burg[:, 1], burg[:, 2], burg[:, 3], angles='xy', scale_units='xy',

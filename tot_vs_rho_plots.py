@@ -9,9 +9,6 @@ from correlation_plot import get_corr_files, prepare_lbl
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
 
-# TODO: magnetization based on ising ground state partition M=sum(si*zi) where zi the normalized height and si the ising
-#  ground state sign of the i'th node
-
 def parse():
     parser = argparse.ArgumentParser(description='plot options')
     parser.add_argument('-N', '--N', type=str, nargs='+', help='N values to plot')
@@ -54,23 +51,25 @@ def calc_tot(folder, op):
         N = c[0]
         return 1 / N ** 2 * np.sum(gM * c)
     if op.startswith('Ising'):
-        # ground_states, reals = get_corr_files(op_dir, 'ground_state_')
-        # ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
-        # sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
-        # z = [r[2] for r in sp]
-        # H = max(z)
-        # s = [1 if z_ > H / 2 else -1 for z_ in z]
-        # return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
-        A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
-        minE = float('inf')
-        argminE = None
-        reals = int((A.shape[1] - 1) / 2)
-        for i in range(1, reals + 1):
-            m = min(A[:, i])
-            if m < minE:
-                minE = m
-                argminE = i
-        return np.abs(A[-1, reals + argminE])
+        ground_states, reals = get_corr_files(op_dir, 'ground_state_')
+        ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
+        sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
+        z = [r[2] for r in sp]
+        H = max(z)
+        s = [1 if z_ > H / 2 else -1 for z_ in z]
+        return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
+
+        # When ground_state has bug, one can use this code:
+        # A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
+        # minE = float('inf')
+        # argminE = None
+        # reals = int((A.shape[1] - 1) / 2)
+        # for i in range(1, reals + 1):
+        #     m = min(A[:, i])
+        #     if m < minE:
+        #         minE = m
+        #         argminE = i
+        # return np.abs(A[-1, reals + argminE])
 
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
