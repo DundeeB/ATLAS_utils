@@ -88,8 +88,7 @@ def calc_tot(folder, op, args=None):
                 bonds += 1
                 if s[i] * s[j] > 0:
                     frustration += 1
-        bonds /= 2
-        frustration /= bonds
+        frustration /= bonds  # double counting both in bonds and frustration
         return frustration
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
