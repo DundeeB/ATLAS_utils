@@ -100,6 +100,7 @@ def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl):
 
 
 def main():
+    # TODO: add array of y coloumns and color lines continously so there will be no two lines of same color
     args = parse()
     if args.legends is None:
         args.legends = [None]

@@ -18,6 +18,7 @@ def parse():
     parser.add_argument('-rho', '--rho', type=str, nargs='?', help='rho range', default=(0.0, 1.0))
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
+    parser.add_argument('-E', '--ising_E', type=bool, nargs='?', default=False, const=True)
     args = parser.parse_args()
     args.N = [int(float(N)) for N in args.N]
     args.height = float(args.height)
@@ -43,7 +44,7 @@ def choose_folders(args):
     return folders, x, ics
 
 
-def calc_tot(folder, op):
+def calc_tot(folder, op, args=None):
     op_dir = os.path.join(father_dir, folder, 'OP', op)
     if op.startswith('gM'):
         corr_file = get_corr_files(op_dir)[0][0]
@@ -51,13 +52,23 @@ def calc_tot(folder, op):
         N = c[0]
         return 1 / N ** 2 * np.sum(gM * c)
     if op.startswith('Ising'):
-        ground_states, reals = get_corr_files(op_dir, 'ground_state_')
-        ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
-        sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
-        z = [r[2] for r in sp]
-        H = max(z)
-        s = [1 if z_ > H / 2 else -1 for z_ in z]
-        return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
+        if args is not None and args.ising_E:
+            A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
+            minE = float('inf')
+            reals = int((A.shape[1] - 1) / 2)
+            for i in range(1, reals + 1):
+                m = min(A[:, i])
+                if m < minE:
+                    minE = m
+            return minE
+        else:
+            ground_states, reals = get_corr_files(op_dir, 'ground_state_')
+            ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
+            sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
+            z = [r[2] for r in sp]
+            H = max(z)
+            s = [1 if z_ > H / 2 else -1 for z_ in z]
+            return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
 
         # When ground_state has bug, one can use this code:
         # A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
@@ -129,7 +140,7 @@ def main():
                     if not choose(folder, ic, N):
                         continue
                     try:
-                        y.append(calc_tot(folder, op))
+                        y.append(calc_tot(folder, op, args))
                         x_ic.append(x[j])
                     except Exception as err:
                         print(err)
