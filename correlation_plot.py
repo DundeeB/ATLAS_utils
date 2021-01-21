@@ -17,7 +17,6 @@ def get_corr_files(OP_sub_dir, prefix='correlation_', reverse=True):
 def prepare_lbl(lbl, corr=True):
     lbl = re.sub('_', ' ', lbl)
     lbl = re.sub('rhoH', '$\\\\rho_H$', lbl)
-    lbl = re.sub('sqrt', '$\\\\sqrt$', lbl)
     if corr:
         for mn in ['14', '23', '16']:
             lbl = re.sub('psi ' + mn, '$g_{' + mn + '}$', lbl)
