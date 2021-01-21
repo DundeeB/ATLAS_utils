@@ -163,12 +163,12 @@ def main():
                     y_init = maxys[i - 1]
                     x_init = maxxs[i - 1]
             y = y_init * np.power(x / x_init, -slope)
-            args = [x, y, '--']
+            argsplt = [x, y, '--']
             kwargs = {'label': 'polynomial fit with slope ' + str(slope), 'linewidth': 2}
             if not args.semilogy:
-                plt.loglog(*args, **kwargs)
+                plt.loglog(*argsplt, **kwargs)
             else:
-                plt.semilogy(*args, **kwargs)
+                plt.semilogy(*argsplt, **kwargs)
 
     plt.grid()
     plt.legend()
