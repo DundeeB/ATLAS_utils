@@ -51,7 +51,7 @@ def calc_tot(folder, op, args=None):
         n, gM, c = np.loadtxt(os.path.join(op_dir, corr_file), unpack=True)
         N = c[0]
         return 1 / N ** 2 * np.sum(gM * c)
-    if op.startswith('Ising'):
+    if op.find('Ising') > 0:
         if args is not None and args.ising_E:
             A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
             minE = float('inf')
