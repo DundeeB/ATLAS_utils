@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 from correlation_plot import get_corr_files, prepare_lbl
+import scipy
 
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
@@ -19,6 +20,7 @@ def parse():
     parser.add_argument('-xL', '--xlabel', type=str, nargs='?', default='$\\rho_H$')
     parser.add_argument('-yL', '--ylabel', type=str, nargs='?', default=None)
     parser.add_argument('-E', '--ising_E', type=bool, nargs='?', default=False, const=True)
+    parser.add_argument('-k', '--k', type=int, nargs='?', default=4)
     args = parser.parse_args()
     args.N = [int(float(N)) for N in args.N]
     args.height = float(args.height)
@@ -69,19 +71,26 @@ def calc_tot(folder, op, args=None):
             H = max(z)
             s = [1 if z_ > H / 2 else -1 for z_ in z]
             return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
-
-        # When ground_state has bug, one can use this code:
-        # A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
-        # minE = float('inf')
-        # argminE = None
-        # reals = int((A.shape[1] - 1) / 2)
-        # for i in range(1, reals + 1):
-        #     m = min(A[:, i])
-        #     if m < minE:
-        #         minE = m
-        #         argminE = i
-        # return np.abs(A[-1, reals + argminE])
-
+    if op == "Graph" and args is not None:
+        graph_files, reals = get_corr_files(op_dir, 'k=' + str(args.k) + '_undirected_')
+        real = reals[0]
+        graph_file_path = os.path.join(op_dir, graph_files[0])
+        graph = scipy.sparse.load_npz(graph_file_path)
+        spheres = np.loadtxt(os.path.join(father_dir, folder, str(real)))
+        N = len(spheres)
+        z = [p[2] for p in spheres]
+        max_z, min_z = max(z), min(z)
+        s = [(1 if p[2] > (max_z + min_z) / 2 else -1) for p in spheres]
+        nearest_neighbors = [[j for j in graph.getrow(i).indices] for i in range(N)]
+        bonds, frustration = 0, 0
+        for i in range(N):
+            for j in nearest_neighbors[i]:
+                bonds += 1
+                if s[i] * s[j] > 0:
+                    frustration += 1
+        bonds /= 2
+        frustration /= bonds
+        return frustration
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     if op.startswith('Bragg_S'):
