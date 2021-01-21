@@ -5,7 +5,7 @@ import argparse
 import os
 import re
 from correlation_plot import get_corr_files, prepare_lbl
-import scipy
+import scipy.sparse
 
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
