@@ -5,7 +5,10 @@ import argparse
 import os
 import re
 from correlation_plot import get_corr_files, prepare_lbl
-import scipy.sparse
+from sys import path
+
+path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
+from post_process import Ising
 
 father_dir = '/storage/ph_daniel/danielab/ECMC_simulation_results3.0'
 
@@ -72,24 +75,9 @@ def calc_tot(folder, op, args=None):
             s = [1 if z_ > H / 2 else -1 for z_ in z]
             return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
     if op == "Graph" and args is not None:
-        graph_files, reals = get_corr_files(op_dir, 'k=' + str(args.k) + '_undirected_')
-        real = reals[0]
-        graph_file_path = os.path.join(op_dir, graph_files[0])
-        graph = scipy.sparse.load_npz(graph_file_path)
-        spheres = np.loadtxt(os.path.join(father_dir, folder, str(real)))
-        N = len(spheres)
-        z = [p[2] for p in spheres]
-        max_z, min_z = max(z), min(z)
-        s = [(1 if p[2] > (max_z + min_z) / 2 else -1) for p in spheres]
-        nearest_neighbors = [[j for j in graph.getrow(i).indices] for i in range(N)]
-        bonds, frustration = 0, 0
-        for i in range(N):
-            for j in nearest_neighbors[i]:
-                bonds += 1
-                if s[i] * s[j] > 0:
-                    frustration += 1
-        frustration /= bonds  # double counting both in bonds and frustration
-        return frustration
+        op = Ising(os.path.join(father_dir, folder), k_nearest_neighbors=args.k, directed=False)
+        op.initialize(random_initialization=False, J=-1)
+        return op.frustrated_bonds(op.E, op.J)
     psi_file = get_corr_files(op_dir, 'vec_')[0][0]
     psi = np.loadtxt(os.path.join(op_dir, psi_file), dtype=complex)
     if op.startswith('Bragg_S'):

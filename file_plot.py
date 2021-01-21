@@ -6,7 +6,7 @@ from sys import path
 import os
 
 path.append('/srv01/technion/danielab/OOP_hard_sphere_event_chain/')
-from post_process import Graph
+from post_process import Ising
 
 
 # TODO: Add xy plot coloring by correlation of up-down to ising's ground state
@@ -75,11 +75,11 @@ def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl):
             plt.plot(x[up], y[up], s, label=lbl, linewidth=2, markersize=6)
             plt.plot(x[down], y[down], s, label=lbl, linewidth=2, markersize=6)
         if args.bonds is not None:
-            op = Graph(sim_path=sim_path, k_nearest_neighbors=args.bonds, directed=False,
+            op = Ising(sim_path=sim_path, k_nearest_neighbors=args.bonds, directed=False,
                        centers=[r for r in zip(x, y, z)], spheres_ind=real)
-            op.calc_graph()
+            op.initialize(random_initialization=False, J=-1)
             graph = op.graph
-            spins = op.op_vec
+            spins = op.z_spins
             for i in range(len(x)):
                 for j in graph.getrow(i).indices:
                     ex = [x[i], x[j]]
