@@ -63,11 +63,14 @@ def calc_tot(folder, op, args=None):
                 A = np.loadtxt(os.path.join(op_dir, anneal_mat[0]))
             else:
                 anneal_reals, _ = get_corr_files(op_dir, 'real_')
+                sp_ind = re.split("[_\.]", anneal_reals[0])[2]
+                sp = np.loadtxt(os.path.join(folder, sp_ind))
+                ising_instance = Ising(folder, k_nearest_neighbors=args.k, centers=sp, spheres_ind=sp_ind)
                 Es, Ms = [], []
                 for real in anneal_reals:
                     J, E, M = np.loadtxt(os.path.join(op_dir, real), unpack=True, usecols=(0, 1, 2))
-                    Es.append(E)
-                    Ms.append(M)
+                    Es.append(ising_instance.frustrated_bonds(E, J))
+                    Ms.append(M / ising_instance.N)
                 A = np.transpose([J] + Es + Ms)
             minE = float('inf')
             reals = int((A.shape[1] - 1) / 2)
@@ -145,11 +148,11 @@ def main():
                 for j, folder in enumerate(folders):
                     if not choose(folder, ic, N):
                         continue
-                    # try:
-                    y.append(calc_tot(folder, op, args))
-                    x_ic.append(x[j])
-                    # except Exception as err:
-                    #     print(err)
+                    try:
+                        y.append(calc_tot(folder, op, args))
+                        x_ic.append(x[j])
+                    except Exception as err:
+                        print(err)
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
                     label += ', ' + prepare_lbl(op, corr=False)
