@@ -62,7 +62,7 @@ def calc_tot(folder, op, args=None):
             if len(anneal_mat) > 0:
                 A = np.loadtxt(os.path.join(op_dir, anneal_mat[0]))
             else:
-                anneal_reals = get_corr_files(op_dir, 'real_')
+                anneal_reals, _ = get_corr_files(op_dir, 'real_')
                 Es, Ms = [], []
                 for real in anneal_reals:
                     J, E, M = np.loadtxt(os.path.join(op_dir, real))
