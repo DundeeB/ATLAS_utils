@@ -57,7 +57,7 @@ def calc_tot(folder, op, args=None):
         N = c[0]
         return 1 / N ** 2 * np.sum(gM * c)
     if op.find('Ising') > 0:
-        if args is not None and args.ising_E:
+        if (args is not None) and args.ising_E:
             A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
             minE = float('inf')
             reals = int((A.shape[1] - 1) / 2)
@@ -71,9 +71,9 @@ def calc_tot(folder, op, args=None):
             ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
             sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
             z = [r[2] for r in sp]
-            H = 2*np.mean(z)
-            s = [1 if z_ > H / 2 else -1 for z_ in z]
-            return np.abs(np.mean([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
+            H = 2 * np.mean(z)
+            s_z = [(1 if z_ > H / 2 else -1) for z_ in z]
+            return np.abs(np.mean([s_ * s_ising for s_, s_ising in zip(s_z, ground_state)]))
     if op == "Graph" and args is not None:
         op = Ising(os.path.join(father_dir, folder), k_nearest_neighbors=args.k, directed=False)
         op.initialize(random_initialization=False, J=-1)
