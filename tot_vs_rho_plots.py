@@ -135,11 +135,11 @@ def main():
                 for j, folder in enumerate(folders):
                     if not choose(folder, ic, N):
                         continue
-                    try:
-                        y.append(calc_tot(folder, op, args))
-                        x_ic.append(x[j])
-                    except Exception as err:
-                        print(err)
+                    # try:
+                    y.append(calc_tot(folder, op, args))
+                    x_ic.append(x[j])
+                    # except Exception as err:
+                    #     print(err)
                 label = 'N=' + str(N) + ', Initial conditions = ' + ic
                 if len(args.order_parameter) > 1:
                     label += ', ' + prepare_lbl(op, corr=False)
