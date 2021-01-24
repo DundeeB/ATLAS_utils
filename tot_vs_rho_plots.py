@@ -65,7 +65,7 @@ def calc_tot(folder, op, args=None):
                 anneal_reals, _ = get_corr_files(op_dir, 'real_')
                 Es, Ms = [], []
                 for real in anneal_reals:
-                    J, E, M = np.loadtxt(os.path.join(op_dir, real))
+                    J, E, M = np.loadtxt(os.path.join(op_dir, real), unpack=True, usecols=(0, 1, 2))
                     Es.append(E)
                     Ms.append(M)
                 A = np.transpose([J] + Es + Ms)
