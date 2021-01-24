@@ -58,7 +58,17 @@ def calc_tot(folder, op, args=None):
         return 1 / N ** 2 * np.sum(gM * c)
     if op.find('Ising') >= 0:
         if (args is not None) and args.ising_E:
-            A = np.loadtxt(os.path.join(op_dir, get_corr_files(op_dir, 'anneal_')[0][0]))
+            anneal_mat, _ = get_corr_files(op_dir, 'anneal_')
+            if len(anneal_mat) > 0:
+                A = np.loadtxt(os.path.join(op_dir, anneal_mat[0]))
+            else:
+                anneal_reals = get_corr_files(op_dir, 'real_')
+                Es, Ms = []
+                for real in anneal_reals:
+                    J, E, M = np.loadtxt(os.path.join(op_dir, real))
+                    Es.append(E)
+                    Ms.append(M)
+                A = np.transpose([J] + Es + Ms)
             minE = float('inf')
             reals = int((A.shape[1] - 1) / 2)
             for i in range(1, reals + 1):
