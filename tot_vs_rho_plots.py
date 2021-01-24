@@ -71,9 +71,9 @@ def calc_tot(folder, op, args=None):
             ground_state, real = np.loadtxt(os.path.join(op_dir, ground_states[0])), reals[0]
             sp = np.loadtxt(os.path.join(father_dir, folder, str(real)))
             z = [r[2] for r in sp]
-            H = max(z)
+            H = 2*np.mean(z)
             s = [1 if z_ > H / 2 else -1 for z_ in z]
-            return 1 / len(sp) * np.abs(np.sum([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
+            return np.abs(np.mean([s_ * s_ising for s_, s_ising in zip(s, ground_state)]))
     if op == "Graph" and args is not None:
         op = Ising(os.path.join(father_dir, folder), k_nearest_neighbors=args.k, directed=False)
         op.initialize(random_initialization=False, J=-1)

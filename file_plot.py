@@ -82,6 +82,8 @@ def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl):
             spins = op.z_spins
             for i in range(len(x)):
                 for j in graph.getrow(i).indices:
+                    if j > i:
+                        continue
                     ex = [x[i], x[j]]
                     ey = [y[i], y[j]]
                     if (ex[1] - ex[0]) ** 2 + (ey[1] - ey[0]) ** 2 > 10 ** 2:
