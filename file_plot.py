@@ -45,8 +45,6 @@ def parse():
 def plot_params(args, f, x_col, y_col, s, yscale, sim_path, real, lbl):
     try:
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True)
-        I = np.logical_or(np.isnan(x), np.isnan(y))
-        x, y = x[I], y[I]
     except ValueError:
         x, y = np.loadtxt(f, usecols=(x_col - 1, y_col - 1), unpack=True, dtype=complex)
         x, y = np.abs(x), np.abs(y)
